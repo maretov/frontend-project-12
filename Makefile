@@ -2,10 +2,10 @@ install:
 	npm ci
 
 start-frontend:
-	make -C frontend start
+	make -C frontend develop
 
 start-backend:
-	npx start-server -s .frontend/dist
+	npx start-server -s ./frontend/dist
 
 build:
 	rm -rf frontend/dist
@@ -13,3 +13,6 @@ build:
 
 start:
 	make start-backend
+
+develop:
+	make start-backend & make start-frontend
