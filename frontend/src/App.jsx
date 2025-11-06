@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router'
-import { MainPage, LoginPage, ErrorPage } from './Pages'
+import { MainPage, LoginPage, ErrorPage } from './pages/Pages'
 
-export default () => {
+const App = () => {
 	return (
 		<Routes>
 			<Route path='*' element={<ErrorPage />} />
@@ -10,3 +10,5 @@ export default () => {
 		</Routes>
 	)
 }
+
+export default App

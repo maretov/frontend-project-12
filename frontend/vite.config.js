@@ -7,10 +7,10 @@ export default defineConfig({
   server: {
     port: 5002,
     proxy: {
-      'api': {
+      '/api': {
         target: 'http://localhost:5001',
       },
-      'socket.io': {
+      '/socket.io': {
         target: 'ws://localhost:5001',
         ws: true,
         rewriteWsOrigin: true,
