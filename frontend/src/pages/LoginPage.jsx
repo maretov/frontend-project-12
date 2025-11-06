@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../slices/authSlice'
 
-const baseUrl = 'http://localhost:5002/api/v1'
+const baseUrl = window.location.href
 const loginPagePath = '/login'
 const mainPagePath = '/'
 
