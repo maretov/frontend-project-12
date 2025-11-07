@@ -1,10 +1,11 @@
 import { useEffect } from "react"
-import { useNavigate } from "react-router"
+import { useLocation, useNavigate } from "react-router"
 import { useDispatch } from 'react-redux'
 import { setCredentials } from "../slices/authSlice"
 
 const MainPage = () => {
 	const navigate = useNavigate()
+	const location = useLocation()
 	const dispatch = useDispatch()
 	
 	useEffect(() => {
@@ -14,7 +15,10 @@ const MainPage = () => {
 			dispatch(setCredentials(data))
 		}
 		else {
-			navigate('/login')
+			const currentLocation = `${location.pathname}`
+			navigate('/login', {
+				state: { from: currentLocation }
+			})
 		}
 	})
 

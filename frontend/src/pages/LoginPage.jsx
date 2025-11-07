@@ -1,27 +1,26 @@
 import { Formik, Form, Field } from 'formik'
 import axios from 'axios'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../slices/authSlice'
-
-const baseUrl = window.location.href
-const loginPagePath = '/login'
-const mainPagePath = '/'
+import path from '../routes.js'
 
 const LoginPage = () => {
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
+	const location = useLocation()
 
 	return (
 		<Formik
 			initialValues={{ username: "", password: ""}}
 			onSubmit={async (values, { setSubmitting, setErrors }) => {
 				try {
-					const response = await axios.post(`${baseUrl}${loginPagePath}`, values)
+					const response = await axios.post(path.login(), values)
 					const { data } = response
 					localStorage.setItem('authToken', JSON.stringify(data))
 					dispatch(setCredentials(data))
-					navigate(mainPagePath)
+					const prevLocation = location.state.from
+					navigate(prevLocation)
 				}
 				catch(e) {
 					switch (e.status) {
