@@ -22,7 +22,7 @@ const LoginPage = () => {
 					const prevLocation = location.state.from
 					navigate(prevLocation)
 				}
-				catch(e) {
+				catch (e) {
 					switch (e.status) {
 						case 401:
 							console.log('Код ошибки 401. Неверные логин или пароль')
