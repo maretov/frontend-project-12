@@ -2,24 +2,29 @@ import { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router"
 import { useSelector, useDispatch } from 'react-redux'
 import { setCredentials, removeCredentials } from "../slices/authSlice"
+import { addChannels } from "../slices/channelsSlice.js"
 import axios from 'axios'
 import path from '../routes.js'
+
+const js = (obj) => JSON.stringify(obj, null, '  ')
 
 const MainPage = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const dispatch = useDispatch()
-	const { username, token } = useSelector(state => state.auth)
+	const { token } = useSelector(state => state.auth)
 	const authToken = localStorage.getItem('authToken')
 
-	const logout = (e) => {
+	const { channels } = useSelector(state => state.channels)
+
+	const logout = () => {
 		localStorage.removeItem('authToken')
 		dispatch(removeCredentials())
 	}
 
 	const headers = {
 		'Content-Type': 'application/json',
-		Authorization: `Bearer ${token}`,
+		'Authorization': `Bearer ${token}`,
 	}
 	
 	useEffect(() => {
@@ -37,10 +42,11 @@ const MainPage = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const channels = await axios.get(path.channels(), { headers } )
+				const fetchingChannels = await axios.get(path.channels(), { headers } )
 				const chat = await axios.get(path.messages(), { headers })
-				console.log(channels.data)
-				console.log(chat.data)
+				dispatch(addChannels(fetchingChannels.data))
+				// console.log(`channels in state: ${js(channels)}`)
+				// console.log(chat.data)
 			}
 			catch (e) {
 				console.log(`Error fetching data. Error: ${e}`)
@@ -48,7 +54,7 @@ const MainPage = () => {
 		}
 
 		fetchData()
-	})
+	}, [])
 
 	return (
 		<div className="h-100">
@@ -73,7 +79,18 @@ const MainPage = () => {
 										<span className="visually-hidden">+</span>
 									</button>
 								</div>
-								<ul id="channel-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block"></ul>
+								<ul id="channel-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
+									{Object.values(channels).map(({ id, name }) => {
+										return (
+											<li key={id} className="nav-item w-100">
+												<button type="button" className="w-100 rounded-0 text-start btn btn-secondary">
+													<span className="me-1">#</span>
+													{name}
+												</button>
+											</li>
+										)
+									})}
+								</ul>
 							</div>
 							<div className="col p-0 h-100">
 								<div className="d-flex flex-column h-100">

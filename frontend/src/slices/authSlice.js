@@ -17,8 +17,8 @@ const authSlice = createSlice({
     removeCredentials: (state) => {
       state.username = null
       state.token = null
-    }
-  }
+    },
+  },
 })
 
 export const { setCredentials, removeCredentials } = authSlice.actions
