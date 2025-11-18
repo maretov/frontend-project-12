@@ -5,8 +5,7 @@ import { setCredentials, removeCredentials } from "../slices/authSlice"
 import { addChannels } from "../slices/channelsSlice.js"
 import axios from 'axios'
 import path from '../routes.js'
-
-const js = (obj) => JSON.stringify(obj, null, '  ')
+import { js } from '../utils.js'
 
 const MainPage = () => {
 	const navigate = useNavigate()
@@ -17,16 +16,19 @@ const MainPage = () => {
 
 	const { channels } = useSelector(state => state.channels)
 
+	// деавторизуем пользователя
 	const logout = () => {
 		localStorage.removeItem('authToken')
 		dispatch(removeCredentials())
 	}
 
+	// заголовки для каждого запроса
 	const headers = {
 		'Content-Type': 'application/json',
 		'Authorization': `Bearer ${token}`,
 	}
 	
+	// если обнаруживаем токен в localStorage, то добавляем его в состояние
 	useEffect(() => {
 		if (authToken) {
 			const data = JSON.parse(authToken)
@@ -39,6 +41,7 @@ const MainPage = () => {
 		}
 	})
 
+	// получаем с сервера список каналов и чатов. сохраняем в состояние
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
