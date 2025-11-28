@@ -6,6 +6,7 @@ import { setCredentials } from '../slices/authSlice'
 import path from '../routes.js'
 
 const LoginPage = () => {
+	console.log('\n\n-----------------------Render LoginPage-------------------')
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 	const location = useLocation()
