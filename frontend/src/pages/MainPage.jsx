@@ -3,10 +3,11 @@ import { useLocation, useNavigate } from "react-router"
 import { useSelector, useDispatch } from 'react-redux'
 import { setCredentials, removeCredentials } from "../slices/authSlice"
 import { addChannels, setActiveChannel } from "../slices/channelsSlice.js"
-import { addMessages } from "../slices/messagesSlice.js"
+import { addMessages, addMessage } from "../slices/messagesSlice.js"
 import axios from 'axios'
 import path from '../routes.js'
 import { js, normalize, filterMessages, renderMessages } from '../utils.jsx'
+import { io } from 'socket.io-client'
 
 
 // HEADER AREA
@@ -82,25 +83,45 @@ const ChannelsArea = () => {
 
 // CHAT AREA
 const ChatArea = () => {
+	const { username, token } = useSelector(state => state.auth)
 	const { activeChannel } = useSelector(state => state.channels)
 	const { messages } = useSelector(state => state.messages)
+	const dispatch = useDispatch()
 
 	const inputRef = useRef()
 	const [newMessage, setNewMessage] = useState('')
+
+	const headers = {
+		'Content-Type': 'application/json',
+		'Authorization': `Bearer ${token}`,
+	}
 	
 	const handleChangeNewMessage = ({ target }) => {
 		setNewMessage(target.value)
 		inputRef.current.focus()
 	}
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault()
-		console.log(newMessage)
 		setNewMessage('')
 		// 1. Отправить новое сообщение POST запросом.
 		// 		Тело запроса { body: 'new message', channelId: '1', usename: 'user' }.
 		//		Добавить к телу заголовки
-		// 2. Получить подтверждение через websockets
+		try {
+			const messageForFetch = {
+				username: username,
+				channelId: activeChannel.id,
+				body: newMessage,
+			}
+			const fetchingNewMessage = await axios.post(path.messages(), messageForFetch, { headers })
+			// console.log(fetchingNewMessage.data)
+			// dispatch(addMessage(fetchingNewMessage.data))
+		}
+		catch (error) {
+			console.log(`Error sending newMessage/ Error: ${error}`)
+		}
+
+		// 2. Получить ответ через websockets
 		// 		В теле ответа будет возвращено новое сообщение с добавленным ID
 		// 3. Сохранить сообщение в state.
 		//  	Произойдет перерисовка чата
@@ -175,6 +196,14 @@ const MainPage = () => {
 	const { token } = useSelector(state => state.auth)
 	
 	const authToken = localStorage.getItem('authToken')
+
+	const socket = io()
+	socket.on('connect', () => {
+		console.log(`Socket connection start! Socket id: ${socket.id}`)
+	})
+	socket.on('newMessage', (message) => {
+		dispatch(addMessage(message))
+	})
 
 	// если есть токен в localStorage, то добавляем его в состояние
 	// если токена в localStorage нет, то перенаправляем на страницу входа
