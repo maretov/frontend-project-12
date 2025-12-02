@@ -5,9 +5,9 @@ import App from './App.jsx'
 import store from './slices/index.js'
 import { Provider } from 'react-redux'
 
-const root = document.getElementById('root')
+const chat = document.getElementById('chat')
 
-ReactDOM.createRoot(root).render(
+ReactDOM.createRoot(chat).render(
   <Provider store={store}>
     <BrowserRouter>
       <App />

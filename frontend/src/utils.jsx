@@ -1,3 +1,5 @@
+import messages from "@hexlet/chat-server/src/routes/messages"
+
 // вспомогательная функция для удобного отображения объектов в консоли
 export const js = (obj) => console.log(JSON.stringify(obj, null, '  '))
 
@@ -11,6 +13,16 @@ export const normalize = (entities) => {
 
 export const filterMessages = (messages, channelId) => {
   const filtered = Object.entries(messages)
-    .filter((message) => message.channelId === channelId)
+    .filter(([id, message]) => message.channelId === channelId)
   return Object.fromEntries(filtered) 
 }
+
+export const renderMessages = (messages) => (
+  Object.values(messages)
+    .map(({ id, username, body }) => (
+      <div key={id} className="text-break mb-2">
+        <b>{`${username}: `}</b>
+        {body}
+      </div>
+    ))
+)

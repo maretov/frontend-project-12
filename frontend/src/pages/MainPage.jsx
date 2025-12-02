@@ -6,7 +6,7 @@ import { addChannels, setActiveChannel } from "../slices/channelsSlice.js"
 import { addMessages } from "../slices/messagesSlice.js"
 import axios from 'axios'
 import path from '../routes.js'
-import { js, normalize, filterMessages } from '../utils.js'
+import { js, normalize, filterMessages, renderMessages } from '../utils.jsx'
 
 const MainPage = () => {
 	const navigate = useNavigate()
@@ -21,9 +21,16 @@ const MainPage = () => {
 	const [newMessage, setNewMessage] = useState('')
 	const handleChangeNewMessage = ({ target }) => {
 		setNewMessage(target.value)
-		console.log(inputRef.current)
-		inputRef.current.focus()
-		console.log(inputRef.current)
+		// console.log(inputRef.current)
+		// setTimeout(() => inputRef.current.focus(), 0)
+		// inputRef.current.focus()
+		// console.log(inputRef.current)
+	}
+
+	const handleSubmit = (e) => {
+		e.preventDefault()
+		console.log(newMessage)
+		inputRef.current.value = ''
 	}
 
 	// деавторизуем пользователя
@@ -81,8 +88,12 @@ const MainPage = () => {
 		fetchData()
 	}, [token])
 
+	useEffect(() => {
+		inputRef.current.focus()
+	})
+
 	const NavBar = () => (
-		<nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-light">
+		<nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
 			<div className="container">
 				<a className="navbar-brand" href="/">Hexlet Chat</a>
 				<button onClick={logout} type="button" className="btn btn-primary">Выйти</button>
@@ -94,7 +105,7 @@ const MainPage = () => {
 		const Header = () => (
 			<div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
 					<b>Каналы</b>
-					<button type="button" className="p-0 text-primary btn btn-gpoup-vertical">
+					<button type="button" className="p-0 text-primary btn btn-group-vertical">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" className="bi bi-plus-square">
 							<path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
 							<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"></path>
@@ -137,7 +148,7 @@ const MainPage = () => {
 	}
 
 	const MessagesArea = () => {
-		const activeMessages = filterMessages(messages)
+		const activeMessages = (activeChannel ? filterMessages(messages, activeChannel.id) : {})
 		const messagesCount = Object.keys(activeMessages).length
 
 		const Header = () => (
@@ -153,13 +164,15 @@ const MainPage = () => {
 		)
 
 		const Messages = () => (
-			<div id="messages-box" className="chat-messages overflow-auto px-5"></div>
+			<div id="messages-box" className="chat-messages overflow-auto px-5">
+				{renderMessages(activeMessages)}
+			</div>
 		)
 
 		const Input = () => (
 			<div className="mt-auto px-5 py-3">
-				<form noValidate={true} className="py-1 border rounded-2">
-					<div className="input-group has-validation">
+				<form onSubmit={handleSubmit} noValidate={true} className="py-1 border rounded-2">
+					<div className="input-group">
 						<input
 							ref={inputRef}
 							onChange={handleChangeNewMessage}
@@ -169,7 +182,7 @@ const MainPage = () => {
 							placeholder="Введите сообщение..."
 							className="border-0 p-0 ps-2 form-control"
 						/>
-						<button type="submit" className="btn btn-group-vertical">
+						<button type="submit" className="btn btn-group-vertical" disabled={!newMessage}>
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" className="bi bi-arrow-right-square">
 								<path fillRule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"></path>
 							</svg>
@@ -192,16 +205,12 @@ const MainPage = () => {
 	}
 
 	return (
-		<div className="h-100">
-			<div className="h-100" id="chat">
-				<div className="d-flex flex-column h-100">
-					<NavBar />
-					<div className="container h-100 my-4 overflow-hidden rounded shadow">
-						<div className="row h-100 bg-light flex-md-row">
-							<ChannelsArea />
-							<MessagesArea />
-						</div>
-					</div>
+		<div className="d-flex flex-column h-100">
+			<NavBar />
+			<div className="container h-100 my-4 overflow-hidden rounded shadow">
+				<div className="row h-100 bg-white flex-md-row">
+					<ChannelsArea />
+					<MessagesArea />
 				</div>
 			</div>
 		</div>
