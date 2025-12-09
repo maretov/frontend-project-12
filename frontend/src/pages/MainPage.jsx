@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { setCredentials, removeCredentials } from "../slices/authSlice"
 import { addChannels, setActiveChannel } from "../slices/channelsSlice"
 import { addMessages, addMessage } from "../slices/messagesSlice"
+import { useTranslation } from "react-i18next"
 import axios from "axios"
 import path from "../routes"
 import { js, normalize, filterMessages, renderMessages } from "../utils"
@@ -87,6 +88,7 @@ const ChatArea = () => {
 	const { activeChannel } = useSelector(state => state.channels)
 	const { messages } = useSelector(state => state.messages)
 	const dispatch = useDispatch()
+	const { t } = useTranslation()
 
 	const inputRef = useRef()
 	const [newMessage, setNewMessage] = useState("")
@@ -142,7 +144,9 @@ const ChatArea = () => {
 					{activeChannel && activeChannel.name}
 				</b>
 			</p>
-			<span className="text-muted">{`${messagesCount} сообщений - ИСПРАВИТЬ склонения (i18next)!`}</span>
+			<span className="text-muted">
+				{`${messagesCount} ${t("chat.header.messagesCount", { count: messagesCount })}`}
+			</span>
 		</div>
 	)
 
