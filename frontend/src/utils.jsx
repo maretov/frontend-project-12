@@ -1,5 +1,3 @@
-import messages from "@hexlet/chat-server/src/routes/messages"
-
 // вспомогательная функция для удобного отображения объектов в консоли
 export const js = (obj) => console.log(JSON.stringify(obj, null, "  "))
 
@@ -13,7 +11,7 @@ export const normalize = (entities) => {
 
 export const filterMessages = (messages, channelId) => {
   const filtered = Object.entries(messages)
-    .filter(([id, message]) => message.channelId === channelId)
+    .filter(([id, message]) => message.channelId === channelId) // eslint-disable-line no-unused-vars
   return Object.fromEntries(filtered) 
 }
 

@@ -16,10 +16,10 @@ const messagesSlice = createSlice({
       const { payload } = action
       state.messages[payload.id] = payload
     },
-    editMessage: (state, action) => {
+    editMessage: (state, action) => { // eslint-disable-line no-unused-vars
 
     },
-    removeMessage: (state, action) => {
+    removeMessage: (state, action) => { // eslint-disable-line no-unused-vars
 
     }
   }

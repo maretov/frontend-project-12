@@ -21,7 +21,7 @@ const channelsSlice = createSlice({
     },
     removeChannel: (state, action) => {
       const { payload: id } = action
-      const { [id]: removed, ...restChannels} = state.channels
+      const { [id]: removed, ...restChannels} = state.channels // eslint-disable-line no-unused-vars
       state.channels = restChannels
     },
     setActiveChannel: (state, action) => {

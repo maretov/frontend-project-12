@@ -7,7 +7,7 @@ import { addMessages, addMessage } from "../slices/messagesSlice"
 import { useTranslation } from "react-i18next"
 import axios from "axios"
 import path from "../routes"
-import { js, normalize, filterMessages, renderMessages } from "../utils"
+import { js, normalize, filterMessages, renderMessages } from "../utils" // eslint-disable-line no-unused-vars
 import { io } from "socket.io-client"
 
 
@@ -87,7 +87,6 @@ const ChatArea = () => {
 	const { username, token } = useSelector(state => state.auth)
 	const { activeChannel } = useSelector(state => state.channels)
 	const { messages } = useSelector(state => state.messages)
-	const dispatch = useDispatch()
 	const { t } = useTranslation()
 
 	const inputRef = useRef()
@@ -106,27 +105,18 @@ const ChatArea = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 		setNewMessage("")
-		// 1. Отправить новое сообщение POST запросом.
-		// 		Тело запроса { body: "new message", channelId: "1", usename: "user" }.
-		//		Добавить к телу заголовки
+
 		try {
 			const messageForFetch = {
 				username: username,
 				channelId: activeChannel.id,
 				body: newMessage,
 			}
-			const fetchingNewMessage = await axios.post(path.messages(), messageForFetch, { headers })
-			// console.log(fetchingNewMessage.data)
-			// dispatch(addMessage(fetchingNewMessage.data))
+			await axios.post(path.messages(), messageForFetch, { headers })
 		}
 		catch (error) {
 			console.log(`Error sending newMessage/ Error: ${error}`)
 		}
-
-		// 2. Получить ответ через websockets
-		// 		В теле ответа будет возвращено новое сообщение с добавленным ID
-		// 3. Сохранить сообщение в state.
-		//  	Произойдет перерисовка чата
 	}
 
 	useEffect(() => {
@@ -255,7 +245,7 @@ const MainPage = () => {
 		}
 
 		fetchData()
-	}, [token])
+	}, [token, dispatch])
 
 	return (
 		<div className="d-flex flex-column h-100">
