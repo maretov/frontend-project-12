@@ -1,12 +1,12 @@
-import { Formik, Form, Field } from 'formik'
-import axios from 'axios'
-import { useLocation, useNavigate } from 'react-router'
-import { useDispatch } from 'react-redux'
-import { setCredentials } from '../slices/authSlice'
-import path from '../routes.js'
+import { Formik, Form, Field } from "formik"
+import axios from "axios"
+import { useLocation, useNavigate } from "react-router"
+import { useDispatch } from "react-redux"
+import { setCredentials } from "../slices/authSlice"
+import path from "../routes"
 
 const LoginPage = () => {
-	console.log('\n\n-----------------------Render LoginPage-------------------')
+	console.log("\n\n-----------------------Render LoginPage-------------------")
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 	const location = useLocation()
@@ -18,7 +18,7 @@ const LoginPage = () => {
 				try {
 					const response = await axios.post(path.login(), values)
 					const { data } = response
-					localStorage.setItem('authToken', JSON.stringify(data))
+					localStorage.setItem("authToken", JSON.stringify(data))
 					dispatch(setCredentials(data))
 					const prevLocation = location.state.from
 					navigate(prevLocation)
@@ -26,11 +26,11 @@ const LoginPage = () => {
 				catch (e) {
 					switch (e.status) {
 						case 401:
-							console.log('Код ошибки 401. Неверные логин или пароль')
-							setErrors({ submit: 'Неверные логин или пароль' })
+							console.log("Код ошибки 401. Неверные логин или пароль")
+							setErrors({ submit: "Неверные логин или пароль" })
 							break
 						case 404:
-							console.log('Код ошибки 404. Страница не найдена')
+							console.log("Код ошибки 404. Страница не найдена")
 							break
 						default:
 							console.log(`Неизвестная ошибка: ${e}`)
@@ -40,17 +40,17 @@ const LoginPage = () => {
 			}}
 		>
 			{({ errors }) => (
-				<Form className='col-3 mx-auto mt-5'>
-					<div className='form-group mb-3'>
-						<label htmlFor='username' className='form-label'>Username</label>
-						<Field type='text' name='username' className='form-control' />
+				<Form className="col-3 mx-auto mt-5">
+					<div className="form-group mb-3">
+						<label htmlFor="username" className="form-label">Username</label>
+						<Field type="text" name="username" className="form-control" />
 					</div>
-					<div className='form-group mb-3'>
-						<label htmlFor='password' className='form-label'>Password</label>
-						<Field type='password' name='password' className='form-control' />
+					<div className="form-group mb-3">
+						<label htmlFor="password" className="form-label">Password</label>
+						<Field type="password" name="password" className="form-control" />
 					</div>
-					{errors.submit && (<div style={{ color: 'red' }}>{errors.submit}</div>)}
-					<button type='submit' className='btn btn-primary mt-3' >Submit</button>
+					{errors.submit && (<div style={{ color: "red" }}>{errors.submit}</div>)}
+					<button type="submit" className="btn btn-primary mt-3" >Submit</button>
 				</Form>
 			)}
 		</Formik>

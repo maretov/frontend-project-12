@@ -1,7 +1,7 @@
 import messages from "@hexlet/chat-server/src/routes/messages"
 
 // вспомогательная функция для удобного отображения объектов в консоли
-export const js = (obj) => console.log(JSON.stringify(obj, null, '  '))
+export const js = (obj) => console.log(JSON.stringify(obj, null, "  "))
 
 export const normalize = (entities) => {
   const normalized = {}

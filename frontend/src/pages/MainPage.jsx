@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react"
 import { useLocation, useNavigate } from "react-router"
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from "react-redux"
 import { setCredentials, removeCredentials } from "../slices/authSlice"
-import { addChannels, setActiveChannel } from "../slices/channelsSlice.js"
-import { addMessages, addMessage } from "../slices/messagesSlice.js"
-import axios from 'axios'
-import path from '../routes.js'
-import { js, normalize, filterMessages, renderMessages } from '../utils.jsx'
-import { io } from 'socket.io-client'
+import { addChannels, setActiveChannel } from "../slices/channelsSlice"
+import { addMessages, addMessage } from "../slices/messagesSlice"
+import axios from "axios"
+import path from "../routes"
+import { js, normalize, filterMessages, renderMessages } from "../utils"
+import { io } from "socket.io-client"
 
 
 // HEADER AREA
@@ -15,7 +15,7 @@ const NavBar = () => {
 	const dispatch = useDispatch()
 
 	const logout = () => {
-		localStorage.removeItem('authToken')
+		localStorage.removeItem("authToken")
 		dispatch(removeCredentials())
 	}
 
@@ -52,9 +52,9 @@ const ChannelsArea = () => {
 		<ul id="channel-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
 			{Object.values(channels).map((channel) => {
 				const { id, name } = channel
-				let buttonClass = 'w-100 rounded-0 text-start btn'
+				let buttonClass = "w-100 rounded-0 text-start btn"
 				if (id === activeChannel.id) {
-					buttonClass += ' btn-secondary'
+					buttonClass += " btn-secondary"
 				}
 				return (
 					<li key={id} className="nav-item w-100">
@@ -89,11 +89,11 @@ const ChatArea = () => {
 	const dispatch = useDispatch()
 
 	const inputRef = useRef()
-	const [newMessage, setNewMessage] = useState('')
+	const [newMessage, setNewMessage] = useState("")
 
 	const headers = {
-		'Content-Type': 'application/json',
-		'Authorization': `Bearer ${token}`,
+		"Content-Type": "application/json",
+		"Authorization": `Bearer ${token}`,
 	}
 	
 	const handleChangeNewMessage = ({ target }) => {
@@ -103,9 +103,9 @@ const ChatArea = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
-		setNewMessage('')
+		setNewMessage("")
 		// 1. Отправить новое сообщение POST запросом.
-		// 		Тело запроса { body: 'new message', channelId: '1', usename: 'user' }.
+		// 		Тело запроса { body: "new message", channelId: "1", usename: "user" }.
 		//		Добавить к телу заголовки
 		try {
 			const messageForFetch = {
@@ -195,13 +195,13 @@ const MainPage = () => {
 	const dispatch = useDispatch()
 	const { token } = useSelector(state => state.auth)
 	
-	const authToken = localStorage.getItem('authToken')
+	const authToken = localStorage.getItem("authToken")
 
 	const socket = io()
-	socket.on('connect', () => {
+	socket.on("connect", () => {
 		console.log(`Socket connection start! Socket id: ${socket.id}`)
 	})
-	socket.on('newMessage', (message) => {
+	socket.on("newMessage", (message) => {
 		dispatch(addMessage(message))
 	})
 
@@ -210,7 +210,7 @@ const MainPage = () => {
 	useEffect(() => {
 		if (!authToken) {
 			const currentLocation = `${location.pathname}`
-			navigate('/login', {
+			navigate("/login", {
 				state: { from: currentLocation }
 			})
 		}
@@ -220,7 +220,7 @@ const MainPage = () => {
 			dispatch(setCredentials(data))
 		} else {
 			const currentLocation = `${location.pathname}`
-			navigate('/login', {
+			navigate("/login", {
 				state: { from: currentLocation }
 			})
 		}
@@ -231,8 +231,8 @@ const MainPage = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const headers = {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${token}`,
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${token}`,
 			}
 
 			try {
