@@ -2,13 +2,14 @@ import { useState, useEffect, useRef } from "react"
 import { useLocation, useNavigate } from "react-router"
 import { useSelector, useDispatch } from "react-redux"
 import { setCredentials, removeCredentials } from "../slices/authSlice"
-import { addChannels, setActiveChannel } from "../slices/channelsSlice"
+import { addChannel, addChannels, setActiveChannel } from "../slices/channelsSlice"
 import { addMessages, addMessage } from "../slices/messagesSlice"
 import { useTranslation } from "react-i18next"
 import axios from "axios"
 import path from "../routes"
 import { js, normalize, filterMessages, renderMessages } from "../utils" // eslint-disable-line no-unused-vars
 import { io } from "socket.io-client"
+import { ChannelAdd } from "./Modals"
 
 
 // HEADER AREA
@@ -34,19 +35,43 @@ const NavBar = () => {
 // CHANNELS AREA
 const ChannelsArea = () => {
 	const { channels, activeChannel } = useSelector(state => state.channels)
+	const { headers } = useSelector(state => state.auth)
 	const dispatch = useDispatch()
+	const [show, setShow] = useState(false)
+
+	const onShow = () => {
+		setShow(true)
+	}
+
+	const onHide = () => {
+		setShow(false)
+	}
+
+	const onChannelAdd = async (newChannel) => {
+		try {
+			await axios.post(path.channels(), { name: newChannel }, { headers })
+			console.log('Success adding new channel!')
+		}
+		catch (e) {
+			console.log(`Error adding new channel. Error: ${e}`)
+		}
+	}
 
 	const Header = () => (
 		<div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
-				<b>Каналы</b>
-				<button type="button" className="p-0 text-primary btn btn-group-vertical">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" className="bi bi-plus-square">
-						<path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
-						<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"></path>
-					</svg>
-					<span className="visually-hidden">+</span>
-				</button>
-			</div>
+			<b>Каналы</b>
+			<button
+				onClick={onShow}
+				type="button"
+				className="p-0 text-primary btn btn-group-vertical"
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" className="bi bi-plus-square">
+					<path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
+					<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"></path>
+				</svg>
+				<span className="visually-hidden">+</span>
+			</button>
+		</div>
 	)
 
 	const Channels = () => (
@@ -75,6 +100,7 @@ const ChannelsArea = () => {
 
 	return (
 		<div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
+			{show ? <ChannelAdd onHide={onHide} onChannelAdd={onChannelAdd} /> : null}
 			<Header />
 			<Channels />
 		</div>
@@ -115,7 +141,7 @@ const ChatArea = () => {
 			await axios.post(path.messages(), messageForFetch, { headers })
 		}
 		catch (error) {
-			console.log(`Error sending newMessage/ Error: ${error}`)
+			console.log(`Error sending newMessage. Error: ${error}`)
 		}
 	}
 
@@ -187,7 +213,7 @@ const MainPage = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const dispatch = useDispatch()
-	const { token } = useSelector(state => state.auth)
+	const { token, headers } = useSelector(state => state.auth)
 	
 	const authToken = localStorage.getItem("authToken")
 
@@ -195,8 +221,14 @@ const MainPage = () => {
 	socket.on("connect", () => {
 		console.log(`Socket connection start! Socket id: ${socket.id}`)
 	})
+	socket.on("disconnect", () => {
+		console.log("Socket is disconnected!")
+	})
 	socket.on("newMessage", (message) => {
 		dispatch(addMessage(message))
+	})
+	socket.on("newChannel", (channel) => {
+		dispatch(addChannel(channel))
 	})
 
 	// если есть токен в localStorage, то добавляем его в состояние
@@ -224,28 +256,32 @@ const MainPage = () => {
 	// сохраняем в состояние
 	useEffect(() => {
 		const fetchData = async () => {
-			const headers = {
-				"Content-Type": "application/json",
-				"Authorization": `Bearer ${token}`,
+			// const headers = {
+			// 	"Content-Type": "application/json",
+			// 	"Authorization": `Bearer ${token}`,
+			// }
+
+			try {
+				const fetchingChannels = await axios.get(path.channels(), { headers })
+				const normalizedChannels = normalize(fetchingChannels.data)
+				dispatch(addChannels(normalizedChannels))
+			}
+			catch (e) {
+				console.log(`Error fetching channels. Error: ${e}`)
 			}
 
 			try {
-				const fetchingChannels = await axios.get(path.channels(), { headers } )
-				const normalizedChannels = normalize(fetchingChannels.data)
-
 				const fetchingMessages = await axios.get(path.messages(), { headers })
 				const normalizedMessages = normalize(fetchingMessages.data)
-
-				dispatch(addChannels(normalizedChannels))
 				dispatch(addMessages(normalizedMessages))
 			}
 			catch (e) {
-				console.log(`Error fetching data. Error: ${e}`)
+				console.log(`Error fetching messages. Error: ${e}`)
 			}
 		}
 
 		fetchData()
-	}, [token, dispatch])
+	}, [token, headers, dispatch])
 
 	return (
 		<div className="d-flex flex-column h-100">

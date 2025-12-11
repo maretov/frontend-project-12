@@ -6,7 +6,6 @@ import { setCredentials } from "../slices/authSlice"
 import path from "../routes"
 
 const LoginPage = () => {
-	console.log("\n\n-----------------------Render LoginPage-------------------")
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 	const location = useLocation()
@@ -14,7 +13,7 @@ const LoginPage = () => {
 	return (
 		<Formik
 			initialValues={{ username: "", password: ""}}
-			onSubmit={async (values, { setSubmitting, setErrors }) => {
+			onSubmit={async (values, { setErrors }) => {
 				try {
 					const response = await axios.post(path.login(), values)
 					const { data } = response
@@ -36,7 +35,6 @@ const LoginPage = () => {
 							console.log(`Неизвестная ошибка: ${e}`)
 					}
 				}
-				setSubmitting(false)
 			}}
 		>
 			{({ errors }) => (
