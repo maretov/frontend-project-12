@@ -10,6 +10,7 @@ import path from "../routes"
 import { js, normalize, filterMessages, renderMessages } from "../utils" // eslint-disable-line no-unused-vars
 import { io } from "socket.io-client"
 import { ChannelAdd } from "./Modals"
+import _ from "lodash"
 
 
 // HEADER AREA
@@ -57,6 +58,8 @@ const ChannelsArea = () => {
 		}
 	}
 
+	const channelsNames = _.values(channels).map(i => i.name)
+
 	const Header = () => (
 		<div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
 			<b>Каналы</b>
@@ -100,7 +103,7 @@ const ChannelsArea = () => {
 
 	return (
 		<div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
-			{show ? <ChannelAdd onHide={onHide} onChannelAdd={onChannelAdd} /> : null}
+			{show ? <ChannelAdd onHide={onHide} onChannelAdd={onChannelAdd} channelsNames={channelsNames} /> : null}
 			<Header />
 			<Channels />
 		</div>

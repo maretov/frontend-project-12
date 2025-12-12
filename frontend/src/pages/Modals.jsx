@@ -1,8 +1,9 @@
 import { Formik, Form, Field } from "formik"
 import { useEffect, useRef } from "react"
+import * as yup from "yup"
 
 export const ChannelAdd = (props) => {
-  const { onHide, onChannelAdd } = props
+  const { onHide, onChannelAdd, channelsNames } = props
 
   const inputRef = useRef()
 
@@ -20,8 +21,18 @@ export const ChannelAdd = (props) => {
         onChannelAdd(values.newChannel)
         onHide()
       }}
+      validationSchema={
+        yup.object().shape({
+          newChannel: yup
+            .string()
+            .required("Обязательное поле")
+            .min(3, "От 3 до 20 символов")
+            .max(20, "От 3 до 20 символов")
+            .notOneOf(channelsNames, "Должно быть уникальным")
+        })
+      }
     >
-      {({ errors }) => (
+      {({ errors, touched }) => (
         <>
           <div className="fade modal-backdrop show"></div>
           <div aria-modal="true" className="fade modal show" tabIndex="-1" style={{ display: "block" }}>
@@ -43,6 +54,7 @@ export const ChannelAdd = (props) => {
                     <div className="form-group mb-2">
                       <label htmlFor="newChannel" className="visually-hidden"></label>
                       <Field ref={inputRef} type="text" name="newChannel" id="newChannel" className="form-control"></Field>
+                      {errors.newChannel && touched.newChannel ? <div>{errors.newChannel}</div> : null}
                     </div>
                     <div className="d-flex justify-content-end">
                       <button onClick={onHide} type="button" className="me-2 btn btn-secondary">Отменить</button>
