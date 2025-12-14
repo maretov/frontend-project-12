@@ -4,7 +4,8 @@ import { BrowserRouter } from "react-router"
 import App from "./App"
 import store from "./slices/index"
 import { Provider } from "react-redux"
-import "./languages/i18n"
+import "./locales/i18n"
+import "./index.scss"
 
 const chat = document.getElementById("chat")
 

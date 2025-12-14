@@ -26,7 +26,7 @@ const LoginPage = () => {
 					switch (e.status) {
 						case 401:
 							console.log("Код ошибки 401. Неверные логин или пароль")
-							setErrors({ submit: "Неверные логин или пароль" })
+							setErrors({ submit: "Неверные имя пользователя или пароль" })
 							break
 						case 404:
 							console.log("Код ошибки 404. Страница не найдена")
@@ -37,20 +37,25 @@ const LoginPage = () => {
 				}
 			}}
 		>
-			{({ errors }) => (
-				<Form className="col-3 mx-auto mt-5">
-					<div className="form-group mb-3">
-						<label htmlFor="username" className="form-label">Username</label>
-						<Field type="text" name="username" className="form-control" />
-					</div>
-					<div className="form-group mb-3">
-						<label htmlFor="password" className="form-label">Password</label>
-						<Field type="password" name="password" className="form-control" />
-					</div>
-					{errors.submit && (<div style={{ color: "red" }}>{errors.submit}</div>)}
-					<button type="submit" className="btn btn-primary mt-3" >Submit</button>
-				</Form>
-			)}
+			{({ errors }) => {
+				const inputClasses = errors.submit ? "form-control is-invalid" : "form-control"
+
+				return (
+					<Form className="col-3 mx-auto mt-5">
+						<div className="form-group mb-3">
+							<label htmlFor="username" className="form-label">Username</label>
+							<Field type="text" name="username" className={inputClasses} />
+						</div>
+						<div className="form-group mb-3">
+							<label htmlFor="password" className="form-label">Password</label>
+							<Field type="password" name="password" className={inputClasses} />
+							{errors.submit && (<div className="invalid-feedback mt-3">{errors.submit}</div>)}
+						</div>
+						
+						<button type="submit" className="btn btn-primary" >Submit</button>
+					</Form>
+				)
+			}}
 		</Formik>
 	)
 }

@@ -17,7 +17,6 @@ export const ChannelAdd = (props) => {
     <Formik
       initialValues={{ newChannel: ""}}
       onSubmit={async (values, { setErrors }) => {
-        // использовать здесь переданную в props функцию\
         onChannelAdd(values.newChannel)
         onHide()
       }}
@@ -32,41 +31,45 @@ export const ChannelAdd = (props) => {
         })
       }
     >
-      {({ errors, touched }) => (
-        <>
-          <div className="fade modal-backdrop show"></div>
-          <div aria-modal="true" className="fade modal show" tabIndex="-1" style={{ display: "block" }}>
-            <div className="modal-dialog modal-dialog-centered">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <div className="modal-title h4">Добавить канал</div>
-                  <button
-                    onClick={onHide}
-                    type="button"
-                    aria-label="Close"
-                    data-bs-dismiss="modal"
-                    className="btn btn-close"
-                  >
-                  </button>
-                </div>
-                <div className="modal-body">
-                  <Form>
-                    <div className="form-group mb-2">
-                      <label htmlFor="newChannel" className="visually-hidden"></label>
-                      <Field ref={inputRef} type="text" name="newChannel" id="newChannel" className="form-control"></Field>
-                      {errors.newChannel && touched.newChannel ? <div>{errors.newChannel}</div> : null}
-                    </div>
-                    <div className="d-flex justify-content-end">
-                      <button onClick={onHide} type="button" className="me-2 btn btn-secondary">Отменить</button>
-                      <button type="submit" className="btn btn-primary">Отправить</button>
-                    </div>
-                  </Form>
+      {({ errors, touched }) => {
+        const inputClasses = errors.newChannel && touched.newChannel ? "form-control is-invalid" : "form-control"
+
+        return (
+          <>
+            <div className="fade modal-backdrop show"></div>
+            <div aria-modal="true" className="fade modal show" tabIndex="-1" style={{ display: "block" }}>
+              <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <div className="modal-title h4">Добавить канал</div>
+                    <button
+                      onClick={onHide}
+                      type="button"
+                      aria-label="Close"
+                      data-bs-dismiss="modal"
+                      className="btn btn-close"
+                    >
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    <Form>
+                      <div className="form-group mb-2">
+                        <label htmlFor="newChannel" className="visually-hidden"></label>
+                        <Field ref={inputRef} type="text" name="newChannel" id="newChannel" className={inputClasses}></Field>
+                        {errors.newChannel && touched.newChannel ? <div className="invalid-feedback">{errors.newChannel}</div> : null}
+                      </div>
+                      <div className="d-flex justify-content-end">
+                        <button onClick={onHide} type="button" className="me-2 btn btn-secondary">Отменить</button>
+                        <button type="submit" className="btn btn-primary">Отправить</button>
+                      </div>
+                    </Form>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )
+      }}
       
     </Formik>
   )
