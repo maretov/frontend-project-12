@@ -11,6 +11,7 @@ import { js, normalize, filterMessages, renderMessages } from "../utils" // esli
 import { io } from "socket.io-client"
 import { ChannelAdd } from "./Modals"
 import _ from "lodash"
+import { Button, ButtonGroup, Dropdown } from "react-bootstrap"
 
 
 // HEADER AREA
@@ -38,20 +39,14 @@ const ChannelsArea = () => {
 	const { channels, activeChannel } = useSelector(state => state.channels)
 	const { headers } = useSelector(state => state.auth)
 	const dispatch = useDispatch()
-	const [show, setShow] = useState(false)
+	const [showModal, setShowModal] = useState(false)
 
-	const onShow = () => {
-		setShow(true)
-	}
-
-	const onHide = () => {
-		setShow(false)
-	}
+	const onShow = () => setShowModal(true)
+	const onHide = () => setShowModal(false)
 
 	const onChannelAdd = async (newChannel) => {
 		try {
 			await axios.post(path.channels(), { name: newChannel }, { headers })
-			console.log('Success adding new channel!')
 		}
 		catch (e) {
 			console.log(`Error adding new channel. Error: ${e}`)
@@ -79,22 +74,46 @@ const ChannelsArea = () => {
 
 	const Channels = () => (
 		<ul id="channel-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
-			{Object.values(channels).map((channel) => {
-				const { id, name } = channel
-				let buttonClass = "w-100 rounded-0 text-start btn"
-				if (id === activeChannel.id) {
-					buttonClass += " btn-secondary"
-				}
-				return (
-					<li key={id} className="nav-item w-100">
-						<button
+			{_.values(channels).map((channel) => {
+				const { id, name, removable } = channel
+				const variant = id !== activeChannel.id ? "light" : "secondary"
+				const basesClasses = "w-100 rounded-0 text-start text-truncate btn"
+				const btnClasses = (id !== activeChannel.id)
+					? basesClasses
+					: basesClasses.concat(" btn-secondary")
+
+
+
+				const Btn = () => (
+					<Button
 							onClick={() => dispatch(setActiveChannel(channel))}
-							type="button"
-							className={buttonClass}
+							variant={variant}
+							className={btnClasses} // доработать
 						>
 							<span className="me-1">#</span>
 							{name}
-						</button>
+					</Button>
+				)
+
+				const DropdownBtn = ({ children }) => (
+					<Dropdown as={ButtonGroup} className="d-flex">
+						{children}
+						<Dropdown.Toggle
+							split
+							variant={variant}
+						>
+							<Dropdown.Menu align="end">
+								<Dropdown.Item href="#">Удалить</Dropdown.Item>
+								<Dropdown.Item href="#">Переименовать</Dropdown.Item>
+							</Dropdown.Menu>
+						</Dropdown.Toggle>
+					</Dropdown>
+				)
+
+				return (
+					<li key={id} className="nav-item w-100">
+						{removable ? <DropdownBtn><Btn></Btn></DropdownBtn> : <Btn></Btn>}
+						{/* <Btn /> */}
 					</li>
 				)
 			})}
@@ -103,7 +122,7 @@ const ChannelsArea = () => {
 
 	return (
 		<div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
-			{show ? <ChannelAdd onHide={onHide} onChannelAdd={onChannelAdd} channelsNames={channelsNames} /> : null}
+			{showModal ? <ChannelAdd onHide={onHide} onChannelAdd={onChannelAdd} channelsNames={channelsNames} /> : null}
 			<Header />
 			<Channels />
 		</div>

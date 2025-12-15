@@ -16,7 +16,7 @@ export const ChannelAdd = (props) => {
   return (
     <Formik
       initialValues={{ newChannel: ""}}
-      onSubmit={async (values, { setErrors }) => {
+      onSubmit={async (values) => {
         onChannelAdd(values.newChannel)
         onHide()
       }}
