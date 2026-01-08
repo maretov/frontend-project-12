@@ -188,11 +188,19 @@ const ChatArea = () => {
 		</div>
 	)
 
-	const Messages = () => (
-		<div id="messages-box" className="chat-messages overflow-auto px-5">
-			{renderMessages(activeMessages)}
-		</div>
-	)
+	const Messages = () => {
+		const messagesContainer = useRef()
+
+		useEffect(() => {
+				messagesContainer.current.scrollTop = messagesContainer.current.scrollHeight
+		}, [])
+		
+		return (
+			<div ref={messagesContainer} id="messages-box" className="chat-messages overflow-auto px-5">
+				{renderMessages(activeMessages)}
+			</div>
+		)
+	}
 
 	const Input = () => (
 		<div className="mt-auto px-5 py-3">
