@@ -3,7 +3,7 @@ const apiPath = `${origin}/api/v1`
 
 const path = {
   login: () => `${apiPath}/login`,
-  channels: () => `${apiPath}/channels`,
+  channels: (id) => id ? `${apiPath}/channels/${id}` : `${apiPath}/channels`,
   messages: () => `${apiPath}/messages`,
 }
 

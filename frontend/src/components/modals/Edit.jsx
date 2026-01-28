@@ -1,68 +1,66 @@
-import { Formik } from "formik"
 import { useEffect, useRef } from "react"
+import { Formik } from "formik"
 import { Modal, Form, Button } from "react-bootstrap"
 import * as yup from "yup"
 
-export const ChannelAdd = (props) => {
-  const { onHide, onChannelAdd, channelsNames } = props
+const ModalEdit = (props) => {
+  const { onHide, action, channelsNames, channel } = props
 
   const inputRef = useRef()
 
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.focus()
+      inputRef.current.select()
     }
   }, [])
+
+  const schema = yup.object().shape({
+    channelName: yup
+      .string()
+      .required("Обязательное поле")
+      .min(3, "От 3 до 20 символов")
+      .max(20, "От 3 до 20 символов")
+      .notOneOf(channelsNames, "Должно быть уникальным")
+  })
 
   return (
     <Modal show={true} centered>
       <Modal.Header closeButton onClick={onHide}>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>Переименовать канал</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-
         <Formik
-          initialValues={{ newChannel: ""}}
+          initialValues={{ channelName: channel.name }}
           onSubmit={async (values) => {
-            onChannelAdd(values.newChannel)
+            action(values.channelName)
             onHide()
           }}
-          validationSchema={
-            yup.object().shape({
-              newChannel: yup
-                .string()
-                .required("Обязательное поле")
-                .min(3, "От 3 до 20 символов")
-                .max(20, "От 3 до 20 символов")
-                .notOneOf(channelsNames, "Должно быть уникальным")
-            })
-          }
+          validationSchema={schema}
         >
           {({ handleSubmit, handleChange, values, touched, errors }) => (
             <Form noValidate onSubmit={handleSubmit}>
               <Form.Group>
-                <Form.Label htmlFor="newChannel" className="visually-hidden">Имя канала</Form.Label>
+                <Form.Label htmlFor="channelName" className="visually-hidden">Имя канала</Form.Label>
                 
                 <Form.Control
-                  value={values.newChannel}
+                  value={values.channelName}
                   onChange={handleChange}
-                  id="newChannel"
-                  name="newChannel"
+                  id="channelName"
+                  name="channelName"
                   type="text"
                   className="mb-2"
-                  isValid={!errors.newChannel && touched.newChannel}
-                  isInvalid={errors.newChannel && touched.newChannel}
+                  isValid={!errors.channelName && touched.channelName}
+                  isInvalid={errors.channelName && touched.channelName}
                   ref={inputRef}
-                >
+                > 
                 </Form.Control>
                 
-                <Form.Control.Feedback type="invalid">{errors.newChannel}</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">{errors.channelName}</Form.Control.Feedback>
                 
                 <div className="d-flex justify-content-end">
                   <Button type="button" variant="secondary" className="me-2" onClick={onHide}>Отменить</Button>
                   <Button type="submit">Отправить</Button>
                 </div>
-                
               </Form.Group>
             </Form>
           )}
@@ -71,3 +69,5 @@ export const ChannelAdd = (props) => {
     </Modal>
   )
 }
+
+export default ModalEdit

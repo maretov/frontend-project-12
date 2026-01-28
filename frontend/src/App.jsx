@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router"
-import { MainPage, LoginPage, ErrorPage } from "./pages/Pages"
+import { MainPage, LoginPage, ErrorPage } from "./components/Pages"
 
 const App = () => {
 	return (

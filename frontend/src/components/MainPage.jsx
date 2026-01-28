@@ -2,14 +2,14 @@ import { useState, useEffect, useRef } from "react"
 import { useLocation, useNavigate } from "react-router"
 import { useSelector, useDispatch } from "react-redux"
 import { setCredentials, removeCredentials } from "../slices/authSlice"
-import { addChannel, addChannels, setActiveChannel } from "../slices/channelsSlice"
+import { addChannels, addChannel, renameChannel, removeChannel, setActiveChannel } from "../slices/channelsSlice"
 import { addMessages, addMessage } from "../slices/messagesSlice"
 import { useTranslation } from "react-i18next"
 import axios from "axios"
 import path from "../routes"
 import { js, normalize, filterMessages, renderMessages } from "../utils" // eslint-disable-line no-unused-vars
 import { io } from "socket.io-client"
-import { ChannelAdd } from "./Modals"
+import getModal from "./modals/index"
 import _ from "lodash"
 import { Button, ButtonGroup, Dropdown } from "react-bootstrap"
 
@@ -39,17 +39,35 @@ const ChannelsArea = () => {
 	const { channels, activeChannel } = useSelector(state => state.channels)
 	const { headers } = useSelector(state => state.auth)
 	const dispatch = useDispatch()
-	const [showModal, setShowModal] = useState(false)
+	const [modal, setModal] = useState({ type: null, action: null, channel: null })
 
-	const onShow = () => setShowModal(true)
-	const onHide = () => setShowModal(false)
+	const showModal = (type, action, channel = null) => setModal({ type, action, channel })
+	const hideModal = () => setModal({ type: null, action: null, channel: null })
 
-	const onChannelAdd = async (newChannel) => {
+	const addChannel = async (newChannel) => {
 		try {
 			await axios.post(path.channels(), { name: newChannel }, { headers })
 		}
 		catch (e) {
-			console.log(`Error adding new channel. Error: ${e}`)
+			console.log(`Error adding new channel ${newChannel}. Error: ${e}`)
+		}
+	}
+
+	const editChannel = (channel) => async (editedChannel) => {
+		try {
+			await axios.patch(path.channels(channel.id), { name: editedChannel }, {headers})
+		}
+		catch (e) {
+			console.log(`Error editing channel ${channel.name}. Error: ${e}`)
+		}
+	}
+
+	const removeChannel = (channel) => async () => {
+		try {
+			await axios.delete(path.channels(channel.id), { headers })
+		}
+		catch (e) {
+			console.log(`Error removing channel with ID ${channel.id}. Error: ${e}`)
 		}
 	}
 
@@ -59,7 +77,7 @@ const ChannelsArea = () => {
 		<div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
 			<b>Каналы</b>
 			<button
-				onClick={onShow}
+				onClick={() => showModal('add', addChannel)}
 				type="button"
 				className="p-0 text-primary btn btn-group-vertical"
 			>
@@ -73,7 +91,7 @@ const ChannelsArea = () => {
 	)
 
 	const Channels = () => (
-		<ul id="channel-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
+		<ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
 			{_.values(channels).map((channel) => {
 				const { id, name, removable } = channel
 				const variant = id !== activeChannel.id ? "light" : "secondary"
@@ -86,12 +104,12 @@ const ChannelsArea = () => {
 
 				const Btn = () => (
 					<Button
-							onClick={() => dispatch(setActiveChannel(channel))}
-							variant={variant}
-							className={btnClasses} // доработать
-						>
-							<span className="me-1">#</span>
-							{name}
+						onClick={() => dispatch(setActiveChannel(channel))}
+						variant={variant}
+						className={btnClasses} // доработать
+					>
+						<span className="me-1">#</span>
+						{name}
 					</Button>
 				)
 
@@ -103,8 +121,8 @@ const ChannelsArea = () => {
 							variant={variant}
 						>
 							<Dropdown.Menu align="end">
-								<Dropdown.Item href="#">Удалить</Dropdown.Item>
-								<Dropdown.Item href="#">Переименовать</Dropdown.Item>
+								<Dropdown.Item href="#" onClick={() => showModal("remove", removeChannel(channel), channel)}>Удалить</Dropdown.Item>
+								<Dropdown.Item href="#" onClick={() => showModal("edit", editChannel(channel), channel)}>Переименовать</Dropdown.Item>
 							</Dropdown.Menu>
 						</Dropdown.Toggle>
 					</Dropdown>
@@ -113,18 +131,28 @@ const ChannelsArea = () => {
 				return (
 					<li key={id} className="nav-item w-100">
 						{removable ? <DropdownBtn><Btn></Btn></DropdownBtn> : <Btn></Btn>}
-						{/* <Btn /> */}
 					</li>
 				)
 			})}
 		</ul>
 	)
 
+	const renderModal = () => {
+		const { type, action, channel } = modal
+
+		if (type === null) {
+			return null
+		}
+
+		const Modal = getModal(type)
+		return <Modal onHide={hideModal} action={action} channelsNames={channelsNames} channel={channel} />
+	}
+
 	return (
 		<div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
-			{showModal ? <ChannelAdd onHide={onHide} onChannelAdd={onChannelAdd} channelsNames={channelsNames} /> : null}
 			<Header />
 			<Channels />
+			{renderModal()}
 		</div>
 	)
 }
@@ -244,21 +272,31 @@ const MainPage = () => {
 	const location = useLocation()
 	const dispatch = useDispatch()
 	const { token, headers } = useSelector(state => state.auth)
+	const { defaultChannel, activeChannel } = useSelector(state => state.channels)
 	
 	const authToken = localStorage.getItem("authToken")
 
-	const socket = io()
-	socket.on("connect", () => {
-		console.log(`Socket connection start! Socket id: ${socket.id}`)
-	})
-	socket.on("disconnect", () => {
-		console.log("Socket is disconnected!")
-	})
-	socket.on("newMessage", (message) => {
-		dispatch(addMessage(message))
-	})
-	socket.on("newChannel", (channel) => {
-		dispatch(addChannel(channel))
+	useEffect(() => {
+		const socket = io()
+		socket.on("newMessage", (message) => {
+			dispatch(addMessage(message))
+		})
+		socket.on("newChannel", (channel) => {
+			dispatch(addChannel(channel))
+		})
+		socket.on("renameChannel", (channel) => {
+			dispatch(renameChannel(channel))
+		})
+		socket.on("removeChannel", ({id}) => {
+			dispatch(removeChannel(id))
+			if (activeChannel.id === id) {
+				dispatch(setActiveChannel(defaultChannel))
+			}
+		})
+
+		return () => {
+			socket.disconnect()
+		}
 	})
 
 	// если есть токен в localStorage, то добавляем его в состояние
@@ -286,11 +324,6 @@ const MainPage = () => {
 	// сохраняем в состояние
 	useEffect(() => {
 		const fetchData = async () => {
-			// const headers = {
-			// 	"Content-Type": "application/json",
-			// 	"Authorization": `Bearer ${token}`,
-			// }
-
 			try {
 				const fetchingChannels = await axios.get(path.channels(), { headers })
 				const normalizedChannels = normalize(fetchingChannels.data)
