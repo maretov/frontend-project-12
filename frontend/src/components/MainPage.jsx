@@ -46,7 +46,8 @@ const ChannelsArea = () => {
 
 	const addChannel = async (newChannel) => {
 		try {
-			await axios.post(path.channels(), { name: newChannel }, { headers })
+			const response = await axios.post(path.channels(), { name: newChannel }, { headers })
+			dispatch(setActiveChannel(response.data))
 		}
 		catch (e) {
 			console.log(`Error adding new channel ${newChannel}. Error: ${e}`)
@@ -273,6 +274,7 @@ const MainPage = () => {
 	const dispatch = useDispatch()
 	const { token, headers } = useSelector(state => state.auth)
 	const { defaultChannel, activeChannel } = useSelector(state => state.channels)
+	const { messages } = useSelector(state => state.messages)
 	
 	const authToken = localStorage.getItem("authToken")
 
@@ -288,6 +290,18 @@ const MainPage = () => {
 			dispatch(renameChannel(channel))
 		})
 		socket.on("removeChannel", ({id}) => {
+			_.values(messages)
+				.filter((message) => message.channelId === id)
+				.map((message) => message.id)
+				.forEach(async (idForRemove) => {
+					try {
+						await axios.delete(path.messages(idForRemove), { headers } )
+					}
+					catch (error) {
+						console.log(`Error removing message with id ${idForRemove}. Error: ${error}`)
+					}
+				})
+
 			dispatch(removeChannel(id))
 			if (activeChannel.id === id) {
 				dispatch(setActiveChannel(defaultChannel))
