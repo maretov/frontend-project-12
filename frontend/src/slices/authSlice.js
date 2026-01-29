@@ -22,7 +22,7 @@ const authSlice = createSlice({
     removeCredentials: (state) => {
       state.username = null
       state.token = null
-      state.headers = null
+      state.headers.Authorization = null
     },
   },
 })
