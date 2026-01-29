@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useLocation, useNavigate } from "react-router"
 import { useSelector, useDispatch } from "react-redux"
-import { setCredentials, removeCredentials } from "../slices/authSlice"
+import { setCredentials } from "../slices/authSlice"
 import { addChannels, addChannel, renameChannel, removeChannel, setActiveChannel } from "../slices/channelsSlice"
 import { addMessages, addMessage } from "../slices/messagesSlice"
 import { useTranslation } from "react-i18next"
@@ -13,25 +13,9 @@ import getModal from "./modals/index"
 import _ from "lodash"
 import { Button, ButtonGroup, Dropdown } from "react-bootstrap"
 
+import Header from "./Header"
 
-// HEADER AREA
-const NavBar = () => {
-	const dispatch = useDispatch()
 
-	const logout = () => {
-		localStorage.removeItem("authToken")
-		dispatch(removeCredentials())
-	}
-
-	return (
-		<nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-			<div className="container">
-				<a className="navbar-brand" href="/">Hexlet Chat</a>
-				<button onClick={logout} type="button" className="btn btn-primary">Выйти</button>
-			</div>
-		</nav>
-	)
-}
 
 
 // CHANNELS AREA
@@ -362,7 +346,7 @@ const MainPage = () => {
 
 	return (
 		<div className="d-flex flex-column h-100">
-			<NavBar />
+			<Header />
 			<div className="container h-100 my-4 overflow-hidden rounded shadow">
 				<div className="row h-100 bg-white flex-md-row">
 					<ChannelsArea />
