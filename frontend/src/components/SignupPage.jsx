@@ -25,17 +25,17 @@ const SignUp = () => {
           <h1 className="text-center mb-3">Регистрация</h1>
           <Form>
 
-              <FloatingLabel controlId="username" label="Имя пользователя" className="mb-3">
-                <Form.Control placeholder="Имя пользователя"></Form.Control>
-              </FloatingLabel>
-              
-              <FloatingLabel controlId="username" label="Пароль" className="mb-3">
-                <Form.Control placeholder="Пароль" className="mb-3"></Form.Control>
-              </FloatingLabel>
-              
-              <FloatingLabel controlId="username" label="Подтвердите пароль" className="mb-3">
-                <Form.Control placeholder="Подтвердите пароль" className="mb-3"></Form.Control>
-              </FloatingLabel>
+            <FloatingLabel controlId="username" label="Имя пользователя" className="mb-3">
+              <Form.Control placeholder="Имя пользователя"></Form.Control>
+            </FloatingLabel>
+            
+            <FloatingLabel controlId="username" label="Пароль" className="mb-3">
+              <Form.Control placeholder="Пароль" className="mb-3"></Form.Control>
+            </FloatingLabel>
+            
+            <FloatingLabel controlId="username" label="Подтвердите пароль" className="mb-3">
+              <Form.Control placeholder="Подтвердите пароль" className="mb-3"></Form.Control>
+            </FloatingLabel>
               
             <Button type="submit" variant="outline-primary" className="w-100 mb-3">Зарегистрироваться</Button>
           </Form>
