@@ -13,11 +13,11 @@ import Header from "./Header"
 
 const LoginPage = () => {
 	const navigate = useNavigate()
+	const location = useLocation()	
 	const dispatch = useDispatch()
-	const location = useLocation()
 	const ref = useRef()
 	
-	const CardFooter = () => (
+	const Footer = () => (
 		<div className="text-center p-3">
 			<span>Нет аккаунта? </span>
 			<Link to="/signup">Регистрация</Link>
@@ -59,7 +59,7 @@ const LoginPage = () => {
 	return (
 		<div className="d-flex flex-column h-100">
 			<Header />
-			<AuthContainer footer={<CardFooter />}>
+			<AuthContainer footer={<Footer />}>
 				<div className="d-flex justify-content-around align-items-center p-4">
 					<img
 						src="./src/assets/avatar-login.jpg"
