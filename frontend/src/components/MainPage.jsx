@@ -17,12 +17,12 @@ import Header from "./Header"
 
 
 
-
 // CHANNELS AREA
 const ChannelsArea = () => {
 	const { channels, activeChannel } = useSelector(state => state.channels)
 	const { headers } = useSelector(state => state.auth)
 	const dispatch = useDispatch()
+	const { t } = useTranslation()
 	const [modal, setModal] = useState({ type: null, action: null, channel: null })
 
 	const showModal = (type, action, channel = null) => setModal({ type, action, channel })
@@ -38,12 +38,12 @@ const ChannelsArea = () => {
 		}
 	}
 
-	const editChannel = (channel) => async (editedChannel) => {
+	const renameChannel = (channel) => async (renamedChannel) => {
 		try {
-			await axios.patch(path.channels(channel.id), { name: editedChannel }, {headers})
+			await axios.patch(path.channels(channel.id), { name: renamedChannel }, {headers})
 		}
 		catch (e) {
-			console.log(`Error editing channel ${channel.name}. Error: ${e}`)
+			console.log(`Error renaming channel ${channel.name}. Error: ${e}`)
 		}
 	}
 
@@ -60,7 +60,7 @@ const ChannelsArea = () => {
 
 	const Header = () => (
 		<div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
-			<b>Каналы</b>
+			<b>{t("channels.header")}</b>
 			<button
 				onClick={() => showModal('add', addChannel)}
 				type="button"
@@ -106,8 +106,8 @@ const ChannelsArea = () => {
 							variant={variant}
 						>
 							<Dropdown.Menu align="end">
-								<Dropdown.Item href="#" onClick={() => showModal("remove", removeChannel(channel), channel)}>Удалить</Dropdown.Item>
-								<Dropdown.Item href="#" onClick={() => showModal("edit", editChannel(channel), channel)}>Переименовать</Dropdown.Item>
+								<Dropdown.Item href="#" onClick={() => showModal("remove", removeChannel(channel), channel)}>{t("channels.buttons.remove")}</Dropdown.Item>
+								<Dropdown.Item href="#" onClick={() => showModal("rename", renameChannel(channel), channel)}>{t("channels.buttons.rename")}</Dropdown.Item>
 							</Dropdown.Menu>
 						</Dropdown.Toggle>
 					</Dropdown>
@@ -225,14 +225,14 @@ const ChatArea = () => {
 						value={newMessage}
 						name="body"
 						aria-label="Новое сообщение"
-						placeholder="Введите сообщение..."
+						placeholder={t("chat.form.message")}
 						className="border-0 p-0 ps-2 form-control"
 					/>
 					<button type="submit" className="btn btn-group-vertical" disabled={!newMessage}>
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" className="bi bi-arrow-right-square">
 							<path fillRule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"></path>
 						</svg>
-						<span className="visually-hidden">Отправить</span>
+						<span className="visually-hidden">{t("chat.form.button")}</span>
 					</button>
 				</div>
 			</form>

@@ -2,9 +2,12 @@ import { useEffect, useRef } from "react"
 import { Formik } from "formik"
 import { Modal, Form, Button } from "react-bootstrap"
 import * as yup from "yup"
+import { useTranslation } from "react-i18next"
 
 const ModalEdit = (props) => {
   const { onHide, action, channelsNames, channel } = props
+
+  const { t } = useTranslation()
 
   const inputRef = useRef()
 
@@ -26,7 +29,7 @@ const ModalEdit = (props) => {
   return (
     <Modal show={true} centered>
       <Modal.Header closeButton onClick={onHide}>
-        <Modal.Title>Переименовать канал</Modal.Title>
+        <Modal.Title>{t("modals.header.rename")}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Formik
@@ -40,7 +43,7 @@ const ModalEdit = (props) => {
           {({ handleSubmit, handleChange, values, touched, errors }) => (
             <Form noValidate onSubmit={handleSubmit}>
               <Form.Group>
-                <Form.Label htmlFor="channelName" className="visually-hidden">Имя канала</Form.Label>
+                <Form.Label htmlFor="channelName" className="visually-hidden">{t("modals.label")}</Form.Label>
                 
                 <Form.Control
                   value={values.channelName}
@@ -58,8 +61,8 @@ const ModalEdit = (props) => {
                 <Form.Control.Feedback type="invalid">{errors.channelName}</Form.Control.Feedback>
                 
                 <div className="d-flex justify-content-end">
-                  <Button type="button" variant="secondary" className="me-2" onClick={onHide}>Отменить</Button>
-                  <Button type="submit">Отправить</Button>
+                  <Button type="button" variant="secondary" className="me-2" onClick={onHide}>{t("modals.buttons.cancel")}</Button>
+                  <Button type="submit">{t("modals.buttons.send")}</Button>
                 </div>
               </Form.Group>
             </Form>

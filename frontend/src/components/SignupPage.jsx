@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react"
 import { useLocation, useNavigate, Link } from "react-router"
 import { useDispatch } from "react-redux"
+import { useTranslation } from "react-i18next"
 import { useFormik } from "formik"
 import * as yup from "yup"
 
@@ -16,6 +17,7 @@ const SignUp = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   const ref = useRef()
 
   useEffect(() => {
@@ -26,8 +28,8 @@ const SignUp = () => {
 
   const CardFooter = () => (
     <div className="text-center p-3">
-      <span className="mr-1">Есть аккаунт? </span>
-      <Link to="/login">Войти</Link>
+      <span className="mr-1">{t("signup.footer.question")}</span>
+      <Link to="/login">{t("signup.footer.link")}</Link>
     </div>
   )
 
@@ -59,17 +61,17 @@ const SignUp = () => {
     validationSchema: yup.object({
       username: yup
         .string()
-        .required("Обязательное поле")
-        .min(3, "От 3 до 20 символов")
-        .max(20, "От 3 до 20 символов"),
+        .required(t("signup.errors.required"))
+        .min(3, t("signup.errors.username.length"))
+        .max(20, t("signup.errors.username.length")),
       password: yup
         .string()
-        .required("Обязательное поле")
-        .min(6, "Не менее 6 символов"),
+        .required(t("signup.errors.required"))
+        .min(6, t("signup.errors.password.length")),
       confirmPassword: yup
         .string()
-        .required("Обязательное поле")
-        .oneOf([yup.ref("password")], "Пароли должны совпадать"),
+        .required(t("signup.errors.required"))
+        .oneOf([yup.ref("password")], t("signup.errors.confirmPassword")),
     })
   })
 
@@ -86,12 +88,12 @@ const SignUp = () => {
           alt="Регистрация"
         />
         <div className="w-50">
-          <h1 className="text-center mb-3">Регистрация</h1>
+          <h1 className="text-center mb-3">{t("signup.header")}</h1>
           <Form noValidate onSubmit={handleSubmit}>
 
-            <FloatingLabel controlId="username" label="Имя пользователя" className="mb-3">
+            <FloatingLabel controlId="username" label={t("signup.form.username")} className="mb-3">
               <Form.Control
-                placeholder="Имя пользователя"
+                placeholder={t("signup.form.username")}
                 type="text"
                 name="username"
                 value={values.username}
@@ -105,9 +107,9 @@ const SignUp = () => {
               </Form.Control.Feedback>
             </FloatingLabel>
             
-            <FloatingLabel controlId="password" label="Пароль" className="mb-3">
+            <FloatingLabel controlId="password" label={t("signup.form.password")} className="mb-3">
               <Form.Control
-                placeholder="Пароль"
+                placeholder={t("signup.form.password")}
                 type="password"
                 name="password"
                 value={values.password}
@@ -118,9 +120,9 @@ const SignUp = () => {
               <Form.Control.Feedback type="invalid" tooltip>{errors.password}</Form.Control.Feedback>
             </FloatingLabel>
             
-            <FloatingLabel controlId="confirmPassword" label="Подтвердите пароль" className="mb-3">
+            <FloatingLabel controlId="confirmPassword" label={t("signup.form.confirmPassword")} className="mb-3">
               <Form.Control
-                placeholder="Подтвердите пароль"
+                placeholder={t("signup.form.confirmPassword")}
                 type="password"
                 name="confirmPassword"
                 value={values.confirmPassword}
@@ -130,11 +132,11 @@ const SignUp = () => {
               ></Form.Control>
               <Form.Control.Feedback type="invalid" tooltip>
                 {errors.confirmPassword}
-                {userExists ? " Такой пользователь уже существует" : null}
+                {userExists ? t("signup.errors.userExists") : null}
               </Form.Control.Feedback>
             </FloatingLabel>
 
-            <Button type="submit" variant="outline-primary" className="w-100 mb-3">Зарегистрироваться</Button>
+            <Button type="submit" variant="outline-primary" className="w-100 mb-3">{t("signup.form.button")}</Button>
 
           </Form>
         </div>

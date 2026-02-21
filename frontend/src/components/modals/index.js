@@ -1,10 +1,10 @@
 import Add from "./Add"
-import Edit from "./Edit"
+import Rename from "./Rename"
 import Remove from "./Remove"
 
 const modals = {
   add: Add,
-  edit: Edit,
+  rename: Rename,
   remove: Remove,
 }
 

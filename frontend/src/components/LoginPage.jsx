@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react"
 import { useLocation, useNavigate, Link } from "react-router"
 import { useDispatch } from "react-redux"
+import { useTranslation } from "react-i18next"
 import { setCredentials } from "../slices/authSlice"
 
 import { Form, FloatingLabel, Button } from "react-bootstrap"
@@ -15,12 +16,13 @@ const LoginPage = () => {
 	const navigate = useNavigate()
 	const location = useLocation()	
 	const dispatch = useDispatch()
+	const { t } = useTranslation() 
 	const ref = useRef()
 	
 	const Footer = () => (
 		<div className="text-center p-3">
-			<span>Нет аккаунта? </span>
-			<Link to="/signup">Регистрация</Link>
+			<span>{t("login.footer.question")}</span>
+			<Link to="/signup">{t("login.footer.link")}</Link>
 		</div>
 	)
 
@@ -40,7 +42,7 @@ const LoginPage = () => {
 			catch (e) {
 				if (e.status === 401) {
 					console.warn("Код ошибки 401. Неверные логин или пароль")
-					formik.errors.submit = "Неверные имя пользователя или пароль"
+					formik.errors.submit = t("login.error")
 				} else {
 					console.error(`Неизвестная ошибка: ${e}`)
 				}
@@ -67,14 +69,14 @@ const LoginPage = () => {
 						alt="Авторизация"
 					/>
 					<div className="w-50">
-						<h1 className="text-center mb-3">Войти</h1>
+						<h1 className="text-center mb-3">{t("login.header")}</h1>
 						<Form noValidate onSubmit={handleSubmit}>
 
-							<FloatingLabel controlId="username" label="Имя пользователя" className="mb-3">
+							<FloatingLabel controlId="username" label={t("login.form.username")} className="mb-3">
 								<Form.Control
 									type="text"
 									name="username"
-									placeholder="username"
+									placeholder={t("login.form.username")}
 									value={values.username}
 									onChange={handleChange}
                   isInvalid={errors.submit && touched.username && touched.password}
@@ -83,11 +85,11 @@ const LoginPage = () => {
 								</Form.Control>
 							</FloatingLabel>
 
-							<FloatingLabel controlId="password" label="Пароль" className="mb-3">
+							<FloatingLabel controlId="password" label={t("login.form.password")} className="mb-3">
 								<Form.Control
 									type="password"
 									name="password"
-									placeholder="password"
+									placeholder={t("login.form.password")}
 									value={values.password}
 									onChange={handleChange}
                   isInvalid={errors.submit && touched.username && touched.password}
@@ -98,7 +100,7 @@ const LoginPage = () => {
 							</FloatingLabel>
 
 							<Button	type="submit"	variant="outline-primary w-100 mb-3">
-								Войти
+								{t("login.form.button")}
 							</Button>
 
 						</Form>
