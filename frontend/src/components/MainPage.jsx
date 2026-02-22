@@ -15,7 +15,7 @@ import { Button, ButtonGroup, Dropdown } from "react-bootstrap"
 
 import Header from "./Header"
 
-
+import { ToastContainer, toast } from "react-toastify"
 
 // CHANNELS AREA
 const ChannelsArea = () => {
@@ -32,6 +32,7 @@ const ChannelsArea = () => {
 		try {
 			const response = await axios.post(path.channels(), { name: newChannel }, { headers })
 			dispatch(setActiveChannel(response.data))
+			toast.success(t("toasts.add"))
 		}
 		catch (e) {
 			console.log(`Error adding new channel ${newChannel}. Error: ${e}`)
@@ -41,6 +42,7 @@ const ChannelsArea = () => {
 	const renameChannel = (channel) => async (renamedChannel) => {
 		try {
 			await axios.patch(path.channels(channel.id), { name: renamedChannel }, {headers})
+			toast.success(t("toasts.rename"))
 		}
 		catch (e) {
 			console.log(`Error renaming channel ${channel.name}. Error: ${e}`)
@@ -50,6 +52,7 @@ const ChannelsArea = () => {
 	const removeChannel = (channel) => async () => {
 		try {
 			await axios.delete(path.channels(channel.id), { headers })
+			toast.success(t("toasts.remove"))
 		}
 		catch (e) {
 			console.log(`Error removing channel with ID ${channel.id}. Error: ${e}`)
@@ -351,6 +354,7 @@ const MainPage = () => {
 				<div className="row h-100 bg-white flex-md-row">
 					<ChannelsArea />
 					<ChatArea />
+					<ToastContainer />
 				</div>
 			</div>
 		</div>
