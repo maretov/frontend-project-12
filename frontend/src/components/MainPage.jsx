@@ -16,6 +16,8 @@ import { Button, ButtonGroup, Dropdown } from "react-bootstrap"
 import Header from "./Header"
 
 import { ToastContainer, toast } from "react-toastify"
+import filter from "leo-profanity"
+
 
 // CHANNELS AREA
 const ChannelsArea = () => {
@@ -30,7 +32,7 @@ const ChannelsArea = () => {
 
 	const addChannel = async (newChannel) => {
 		try {
-			const response = await axios.post(path.channels(), { name: newChannel }, { headers })
+			const response = await axios.post(path.channels(), { name: filter.clean(newChannel) }, { headers })
 			dispatch(setActiveChannel(response.data))
 			toast.success(t("toasts.success.add"))
 		}
@@ -42,7 +44,7 @@ const ChannelsArea = () => {
 
 	const renameChannel = (channel) => async (renamedChannel) => {
 		try {
-			await axios.patch(path.channels(channel.id), { name: renamedChannel }, {headers})
+			await axios.patch(path.channels(channel.id), { name: filter.clean(renamedChannel) }, {headers})
 			toast.success(t("toasts.success.rename"))
 		}
 		catch (e) {
@@ -177,7 +179,7 @@ const ChatArea = () => {
 			const messageForFetch = {
 				username: username,
 				channelId: activeChannel.id,
-				body: newMessage,
+				body: filter.clean(newMessage),
 			}
 			await axios.post(path.messages(), messageForFetch, { headers })
 		}
@@ -267,6 +269,8 @@ const MainPage = () => {
 	const { messages } = useSelector(state => state.messages)
 	
 	const authToken = localStorage.getItem("authToken")
+
+	filter.loadDictionary("ru")
 
 	useEffect(() => {
 		const socket = io()
