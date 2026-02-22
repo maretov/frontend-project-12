@@ -32,9 +32,10 @@ const ChannelsArea = () => {
 		try {
 			const response = await axios.post(path.channels(), { name: newChannel }, { headers })
 			dispatch(setActiveChannel(response.data))
-			toast.success(t("toasts.add"))
+			toast.success(t("toasts.success.add"))
 		}
 		catch (e) {
+			toast.error(t("toasts.errors.add"))
 			console.log(`Error adding new channel ${newChannel}. Error: ${e}`)
 		}
 	}
@@ -42,9 +43,10 @@ const ChannelsArea = () => {
 	const renameChannel = (channel) => async (renamedChannel) => {
 		try {
 			await axios.patch(path.channels(channel.id), { name: renamedChannel }, {headers})
-			toast.success(t("toasts.rename"))
+			toast.success(t("toasts.success.rename"))
 		}
 		catch (e) {
+			toast.error(t("toasts.errors.rename"))
 			console.log(`Error renaming channel ${channel.name}. Error: ${e}`)
 		}
 	}
@@ -52,9 +54,10 @@ const ChannelsArea = () => {
 	const removeChannel = (channel) => async () => {
 		try {
 			await axios.delete(path.channels(channel.id), { headers })
-			toast.success(t("toasts.remove"))
+			toast.success(t("toasts.success.remove"))
 		}
 		catch (e) {
+			toast.error(t("toasts.errors.remove"))
 			console.log(`Error removing channel with ID ${channel.id}. Error: ${e}`)
 		}
 	}
