@@ -38,6 +38,7 @@ const SignUp = () => {
   const formik = useFormik({
     initialValues: { username: "", password: "", confirmPassword: "" },
     onSubmit: async (values) => {
+      console.log('SENDING registration data. Values: ', values)
       setUserExist(false)
       const { username, password } = values
       try {
