@@ -30,7 +30,7 @@ const ru = {
     login: {
       header: "Войти",
       form: {
-        username: "Имя пользователя",
+        username: "Ваш ник",
         password: "Пароль",
         button: "Войти",
       },
@@ -90,7 +90,7 @@ const ru = {
       success: {
         add: "Канал создан",
         rename: "Канал переименован",
-        remove: "Канал удален",
+        remove: "Канал удалён",
       },
       errors: {
         add: "Ошибка. Канал не создан",
