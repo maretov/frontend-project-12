@@ -270,7 +270,7 @@ const MainPage = () => {
 	
 	const authToken = localStorage.getItem("authToken")
 
-	filter.loadDictionary("ru")
+	// filter.loadDictionary("ru")
 
 	useEffect(() => {
 		const socket = io()
