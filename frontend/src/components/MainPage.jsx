@@ -11,7 +11,7 @@ import { js, normalize, filterMessages, renderMessages } from "../utils" // esli
 import { io } from "socket.io-client"
 import getModal from "./modals/index"
 import _ from "lodash"
-import { Button, ButtonGroup, Dropdown } from "react-bootstrap"
+import { Button, ButtonGroup, Dropdown, SplitButton } from "react-bootstrap"
 
 import Header from "./Header"
 
@@ -88,42 +88,79 @@ const ChannelsArea = () => {
 			{_.values(channels).map((channel) => {
 				const { id, name, removable } = channel
 				const variant = id !== activeChannel.id ? "light" : "secondary"
-				const basesClasses = "w-100 rounded-0 text-start text-truncate btn"
-				const btnClasses = (id !== activeChannel.id)
-					? basesClasses
-					: basesClasses.concat(" btn-secondary")
-
-
+				const classes = "w-100 rounded-0 text-start text-truncate"
 
 				const Btn = () => (
 					<Button
 						onClick={() => dispatch(setActiveChannel(channel))}
 						variant={variant}
-						className={btnClasses} // доработать
+						className={classes}
 					>
 						<span className="me-1">#</span>
 						{name}
 					</Button>
 				)
 
-				const DropdownBtn = ({ children }) => (
-					<Dropdown as={ButtonGroup} className="d-flex">
-						{children}
-						<Dropdown.Toggle
-							split
-							variant={variant}
-						>
-							<Dropdown.Menu align="end">
-								<Dropdown.Item href="#" onClick={() => showModal("remove", removeChannel(channel), channel)}>{t("channels.buttons.remove")}</Dropdown.Item>
-								<Dropdown.Item href="#" onClick={() => showModal("rename", renameChannel(channel), channel)}>{t("channels.buttons.rename")}</Dropdown.Item>
-							</Dropdown.Menu>
-						</Dropdown.Toggle>
-					</Dropdown>
-				)
+				const renderButton = () => {
+					if (removable) {
+						return (
+							<Dropdown as={ButtonGroup}
+								onClick={() => dispatch(setActiveChannel(channel))}
+								variant={variant}
+								title={name}
+								className="w-100"
+							>
+								<Btn />
+								<Dropdown.Toggle
+									split
+									variant={variant}
+								>
+									<span className="visually-hidden">Управление каналом</span>
+								</Dropdown.Toggle>
+								<Dropdown.Menu>
+									<Dropdown.Item href="#" onClick={() => showModal("remove", removeChannel(channel), channel)}>{t("channels.buttons.remove")}</Dropdown.Item>
+									<Dropdown.Item href="#" onClick={() => showModal("rename", renameChannel(channel), channel)}>{t("channels.buttons.rename")}</Dropdown.Item>
+								</Dropdown.Menu>
+							</Dropdown>
+						)
+					}
+
+					return <Btn />
+				}
+
+				// const Btn = () => (
+				// 	<Button
+				// 		onClick={() => dispatch(setActiveChannel(channel))}
+				// 		variant={variant}
+				// 		className={btnClasses} // доработать
+				// 	>
+				// 		<span className="me-1">#</span>
+				// 		{name}
+				// 	</Button>
+				// )
+
+				// const DropdownBtn = ({ children }) => (
+				// 	<Dropdown as={ButtonGroup} className="d-flex">
+				// 		{children}
+
+				// 		<Dropdown.Toggle
+				// 			split
+				// 			variant={variant}
+				// 		>
+				// 			Управ
+				// 		</Dropdown.Toggle>
+
+				// 		<Dropdown.Menu align="end">
+				// 			<Dropdown.Item href="#" onClick={() => showModal("remove", removeChannel(channel), channel)}>{t("channels.buttons.remove")}</Dropdown.Item>
+				// 			<Dropdown.Item href="#" onClick={() => showModal("rename", renameChannel(channel), channel)}>{t("channels.buttons.rename")}</Dropdown.Item>
+				// 		</Dropdown.Menu>
+
+				// 	</Dropdown>
+				// )
 
 				return (
 					<li key={id} className="nav-item w-100">
-						{removable ? <DropdownBtn><Btn></Btn></DropdownBtn> : <Btn></Btn>}
+						{renderButton()}
 					</li>
 				)
 			})}
@@ -269,8 +306,6 @@ const MainPage = () => {
 	const { messages } = useSelector(state => state.messages)
 	
 	const authToken = localStorage.getItem("authToken")
-
-	// filter.loadDictionary("ru")
 
 	useEffect(() => {
 		const socket = io()
