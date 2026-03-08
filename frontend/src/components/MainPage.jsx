@@ -11,7 +11,7 @@ import { js, normalize, filterMessages, renderMessages } from "../utils" // esli
 import { io } from "socket.io-client"
 import getModal from "./modals/index"
 import _ from "lodash"
-import { Button, ButtonGroup, Dropdown, SplitButton } from "react-bootstrap"
+import { Button, ButtonGroup, Dropdown, DropdownButton, DropdownToggle, SplitButton } from "react-bootstrap"
 
 import Header from "./Header"
 
@@ -104,12 +104,7 @@ const ChannelsArea = () => {
 				const renderButton = () => {
 					if (removable) {
 						return (
-							<Dropdown as={ButtonGroup}
-								onClick={() => dispatch(setActiveChannel(channel))}
-								variant={variant}
-								title={name}
-								className="w-100"
-							>
+							<Dropdown as={ButtonGroup} className="d-flex dropdown">
 								<Btn />
 								<Dropdown.Toggle
 									split
@@ -118,8 +113,18 @@ const ChannelsArea = () => {
 									<span className="visually-hidden">Управление каналом</span>
 								</Dropdown.Toggle>
 								<Dropdown.Menu>
-									<Dropdown.Item href="#" onClick={() => showModal("remove", removeChannel(channel), channel)}>{t("channels.buttons.remove")}</Dropdown.Item>
-									<Dropdown.Item href="#" onClick={() => showModal("rename", renameChannel(channel), channel)}>{t("channels.buttons.rename")}</Dropdown.Item>
+									<Dropdown.Item
+										href="#"
+										onClick={() => showModal("remove", removeChannel(channel), channel)}
+									>
+										{t("channels.buttons.remove")}
+									</Dropdown.Item>
+									<Dropdown.Item
+										href="#"
+										onClick={() => showModal("rename", renameChannel(channel), channel)}
+									>
+										{t("channels.buttons.rename")}
+									</Dropdown.Item>
 								</Dropdown.Menu>
 							</Dropdown>
 						)
@@ -127,36 +132,6 @@ const ChannelsArea = () => {
 
 					return <Btn />
 				}
-
-				// const Btn = () => (
-				// 	<Button
-				// 		onClick={() => dispatch(setActiveChannel(channel))}
-				// 		variant={variant}
-				// 		className={btnClasses} // доработать
-				// 	>
-				// 		<span className="me-1">#</span>
-				// 		{name}
-				// 	</Button>
-				// )
-
-				// const DropdownBtn = ({ children }) => (
-				// 	<Dropdown as={ButtonGroup} className="d-flex">
-				// 		{children}
-
-				// 		<Dropdown.Toggle
-				// 			split
-				// 			variant={variant}
-				// 		>
-				// 			Управ
-				// 		</Dropdown.Toggle>
-
-				// 		<Dropdown.Menu align="end">
-				// 			<Dropdown.Item href="#" onClick={() => showModal("remove", removeChannel(channel), channel)}>{t("channels.buttons.remove")}</Dropdown.Item>
-				// 			<Dropdown.Item href="#" onClick={() => showModal("rename", renameChannel(channel), channel)}>{t("channels.buttons.rename")}</Dropdown.Item>
-				// 		</Dropdown.Menu>
-
-				// 	</Dropdown>
-				// )
 
 				return (
 					<li key={id} className="nav-item w-100">
