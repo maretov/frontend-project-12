@@ -4,13 +4,13 @@ const initialState = {
   username: null,
   token: null,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
     Authorization: null,
   },
 }
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     setCredentials: (state, action) => {

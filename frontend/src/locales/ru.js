@@ -2,103 +2,103 @@ const ru = {
   translation: {
 
     header: {
-      logo: "Hexlet Chat",
-      button: "Выйти",
+      logo: 'Hexlet Chat',
+      button: 'Выйти',
     },
 
     modals: {
       header: {
-        add: "Добавить канал",
-        rename: "Переименовать канал",
-        remove: "Удалить канал",
+        add: 'Добавить канал',
+        rename: 'Переименовать канал',
+        remove: 'Удалить канал',
       },
-      label: "Имя канала",
-      body: "Уверены?",
+      label: 'Имя канала',
+      body: 'Уверены?',
       buttons: {
-        send: "Отправить",
-        remove: "Удалить",
-        cancel: "Отменить",
+        send: 'Отправить',
+        remove: 'Удалить',
+        cancel: 'Отменить',
       },
     },
 
     errorPage: {
-      header: "Страница не найдена",
-      action: "Но вы можете перейти",
-      link: " на главную страницу",
+      header: 'Страница не найдена',
+      action: 'Но вы можете перейти',
+      link: ' на главную страницу',
     },
     
     login: {
-      header: "Войти",
+      header: 'Войти',
       form: {
-        username: "Ваш ник",
-        password: "Пароль",
-        button: "Войти",
+        username: 'Ваш ник',
+        password: 'Пароль',
+        button: 'Войти',
       },
       footer: {
-        question: "Нет аккаунта? ",
-        link: "Регистрация",
+        question: 'Нет аккаунта? ',
+        link: 'Регистрация',
       },
-      error: "Неверные имя пользователя или пароль",
+      error: 'Неверные имя пользователя или пароль',
     },
 
     signup: {
-      header: "Регистрация",
+      header: 'Регистрация',
       form: {
-        username: "Имя пользователя",
-        password: "Пароль",
-        confirmPassword: "Подтвердите пароль",
-        button: "Зарегистрироваться",
+        username: 'Имя пользователя',
+        password: 'Пароль',
+        confirmPassword: 'Подтвердите пароль',
+        button: 'Зарегистрироваться',
       },
       footer: {
-        question: "Есть аккаунт? ",
-        link: "Войти",
+        question: 'Есть аккаунт? ',
+        link: 'Войти',
       },
       errors: {
-        required: "Обязательное поле",
+        required: 'Обязательное поле',
         username: {
-          length: "От 3 до 20 символов",
+          length: 'От 3 до 20 символов',
         },
         password: {
-          length: "Не менее 6 символов",
+          length: 'Не менее 6 символов',
         },
-        confirmPassword: "Пароли должны совпадать",
-        userExists: "Такой пользователь уже существует",
+        confirmPassword: 'Пароли должны совпадать',
+        userExists: 'Такой пользователь уже существует',
       },
     },
 
     channels: {
-      header: "Каналы",
+      header: 'Каналы',
       buttons: {
-        remove: "Удалить",
-        rename: "Переименовать",
+        remove: 'Удалить',
+        rename: 'Переименовать',
       },
     },
 
     chat: {
       header: {
-        messagesCount_one: "сообщение",
-        messagesCount_few: "сообщения",
-        messagesCount_many: "сообщений",
+        messagesCount_one: 'сообщение',
+        messagesCount_few: 'сообщения',
+        messagesCount_many: 'сообщений',
       },
       form: {
-        message: "Введите сообщение...",
-        button: "Отправить",
+        message: 'Введите сообщение...',
+        button: 'Отправить',
       },
     },
 
     toasts: {
       success: {
-        add: "Канал создан",
-        rename: "Канал переименован",
-        remove: "Канал удалён",
+        add: 'Канал создан',
+        rename: 'Канал переименован',
+        remove: 'Канал удалён',
       },
       errors: {
-        add: "Ошибка. Канал не создан",
-        rename: "Ошибка. Канал не переименован",
-        remove: "Ошибка. Канал не удалён",
+        add: 'Ошибка. Канал не создан',
+        rename: 'Ошибка. Канал не переименован',
+        remove: 'Ошибка. Канал не удалён',
       },
     },
-  }
+  },
 }
 
 export default ru

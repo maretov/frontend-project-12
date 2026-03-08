@@ -14,10 +14,10 @@ const ErrorPage = () => {
           alt="Страница не найдена"
           className="img-fluid h-25"
         />
-        <h1 className="h4 text-muted">{t("errorPage.header")}</h1>
+        <h1 className="h4 text-muted">{t('errorPage.header')}</h1>
         <p>
-          {t("errorPage.action")}
-          <Link to="/">{t("errorPage.link")}</Link>
+          {t('errorPage.action')}
+          <Link to="/">{t('errorPage.link')}</Link>
         </p>
       </div>
     </div>

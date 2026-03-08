@@ -11,13 +11,12 @@ import { js, normalize, filterMessages, renderMessages } from '../utils' // esli
 import { io } from 'socket.io-client'
 import getModal from './modals/index'
 import _ from 'lodash'
-import { Button, ButtonGroup, Dropdown, DropdownButton, DropdownToggle, SplitButton } from 'react-bootstrap'
+import { Button, ButtonGroup, Dropdown } from 'react-bootstrap'
 
 import Header from './Header'
 
 import { ToastContainer, toast } from 'react-toastify'
 import filter from 'leo-profanity'
-
 
 // CHANNELS AREA
 const ChannelsArea = () => {
@@ -34,32 +33,32 @@ const ChannelsArea = () => {
     try {
       const response = await axios.post(path.channels(), { name: filter.clean(newChannel) }, { headers })
       dispatch(setActiveChannel(response.data))
-      toast.success(t("toasts.success.add"))
+      toast.success(t('toasts.success.add'))
     }
     catch (e) {
-      toast.error(t("toasts.errors.add"))
+      toast.error(t('toasts.errors.add'))
       console.log(`Error adding new channel ${newChannel}. Error: ${e}`)
     }
   }
 
-  const renameChannel = (channel) => async (renamedChannel) => {
+  const renameChannel = channel => async (renamedChannel) => {
     try {
-      await axios.patch(path.channels(channel.id), { name: filter.clean(renamedChannel) }, {headers})
-      toast.success(t("toasts.success.rename"))
+      await axios.patch(path.channels(channel.id), { name: filter.clean(renamedChannel) }, { headers })
+      toast.success(t('toasts.success.rename'))
     }
     catch (e) {
-      toast.error(t("toasts.errors.rename"))
+      toast.error(t('toasts.errors.rename'))
       console.log(`Error renaming channel ${channel.name}. Error: ${e}`)
     }
   }
 
-  const removeChannel = (channel) => async () => {
+  const removeChannel = channel => async () => {
     try {
       await axios.delete(path.channels(channel.id), { headers })
-      toast.success(t("toasts.success.remove"))
+      toast.success(t('toasts.success.remove'))
     }
     catch (e) {
-      toast.error(t("toasts.errors.remove"))
+      toast.error(t('toasts.errors.remove'))
       console.log(`Error removing channel with ID ${channel.id}. Error: ${e}`)
     }
   }
@@ -68,7 +67,7 @@ const ChannelsArea = () => {
 
   const Header = () => (
     <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
-      <b>{t("channels.header")}</b>
+      <b>{t('channels.header')}</b>
       <button
         onClick={() => showModal('add', addChannel)}
         type="button"
@@ -87,8 +86,8 @@ const ChannelsArea = () => {
     <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
       {_.values(channels).map((channel) => {
         const { id, name, removable } = channel
-        const variant = id !== activeChannel.id ? "light" : "secondary"
-        const classes = "w-100 rounded-0 text-start text-truncate"
+        const variant = id !== activeChannel.id ? 'light' : 'secondary'
+        const classes = 'w-100 rounded-0 text-start text-truncate'
 
         const Btn = () => (
           <Button
@@ -115,15 +114,15 @@ const ChannelsArea = () => {
                 <Dropdown.Menu>
                   <Dropdown.Item
                     href="#"
-                    onClick={() => showModal("remove", removeChannel(channel), channel)}
+                    onClick={() => showModal('remove', removeChannel(channel), channel)}
                   >
-                    {t("channels.buttons.remove")}
+                    {t('channels.buttons.remove')}
                   </Dropdown.Item>
                   <Dropdown.Item
                     href="#"
-                    onClick={() => showModal("rename", renameChannel(channel), channel)}
+                    onClick={() => showModal('rename', renameChannel(channel), channel)}
                   >
-                    {t("channels.buttons.rename")}
+                    {t('channels.buttons.rename')}
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -162,7 +161,6 @@ const ChannelsArea = () => {
   )
 }
 
-
 // CHAT AREA
 const ChatArea = () => {
   const { username, token } = useSelector(state => state.auth)
@@ -171,13 +169,13 @@ const ChatArea = () => {
   const { t } = useTranslation()
 
   const inputRef = useRef()
-  const [newMessage, setNewMessage] = useState("")
+  const [newMessage, setNewMessage] = useState('')
 
   const headers = {
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${token}`,
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
   }
-  
+
   const handleChangeNewMessage = ({ target }) => {
     setNewMessage(target.value)
     inputRef.current.focus()
@@ -185,7 +183,7 @@ const ChatArea = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setNewMessage("")
+    setNewMessage('')
 
     try {
       const messageForFetch = {
@@ -216,7 +214,7 @@ const ChatArea = () => {
         </b>
       </p>
       <span className="text-muted">
-        {`${messagesCount} ${t("chat.header.messagesCount", { count: messagesCount })}`}
+        {`${messagesCount} ${t('chat.header.messagesCount', { count: messagesCount })}`}
       </span>
     </div>
   )
@@ -225,9 +223,9 @@ const ChatArea = () => {
     const messagesContainer = useRef()
 
     useEffect(() => {
-        messagesContainer.current.scrollTop = messagesContainer.current.scrollHeight
+      messagesContainer.current.scrollTop = messagesContainer.current.scrollHeight
     }, [])
-    
+
     return (
       <div ref={messagesContainer} id="messages-box" className="chat-messages overflow-auto px-5">
         {renderMessages(activeMessages)}
@@ -245,14 +243,14 @@ const ChatArea = () => {
             value={newMessage}
             name="body"
             aria-label="Новое сообщение"
-            placeholder={t("chat.form.message")}
+            placeholder={t('chat.form.message')}
             className="border-0 p-0 ps-2 form-control"
           />
           <button type="submit" className="btn btn-group-vertical" disabled={!newMessage}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" className="bi bi-arrow-right-square">
               <path fillRule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"></path>
             </svg>
-            <span className="visually-hidden">{t("chat.form.button")}</span>
+            <span className="visually-hidden">{t('chat.form.button')}</span>
           </button>
         </div>
       </form>
@@ -270,7 +268,6 @@ const ChatArea = () => {
   )
 }
 
-
 // MAIN PAGE
 const MainPage = () => {
   const navigate = useNavigate()
@@ -280,26 +277,26 @@ const MainPage = () => {
   const { defaultChannel, activeChannel } = useSelector(state => state.channels)
   const { messages } = useSelector(state => state.messages)
   
-  const authToken = localStorage.getItem("authToken")
+  const authToken = localStorage.getItem('authToken')
 
   useEffect(() => {
     const socket = io()
-    socket.on("newMessage", (message) => {
+    socket.on('newMessage', (message) => {
       dispatch(addMessage(message))
     })
-    socket.on("newChannel", (channel) => {
+    socket.on('newChannel', (channel) => {
       dispatch(addChannel(channel))
     })
-    socket.on("renameChannel", (channel) => {
+    socket.on('renameChannel', (channel) => {
       dispatch(renameChannel(channel))
     })
-    socket.on("removeChannel", ({id}) => {
+    socket.on('removeChannel', ({ id }) => {
       _.values(messages)
-        .filter((message) => message.channelId === id)
-        .map((message) => message.id)
+        .filter(message => message.channelId === id)
+        .map(message => message.id)
         .forEach(async (idForRemove) => {
           try {
-            await axios.delete(path.messages(idForRemove), { headers } )
+            await axios.delete(path.messages(idForRemove), { headers })
           }
           catch (error) {
             console.log(`Error removing message with id ${idForRemove}. Error: ${error}`)
@@ -322,18 +319,19 @@ const MainPage = () => {
   useEffect(() => {
     if (!authToken) {
       const currentLocation = `${location.pathname}`
-      navigate("/login", {
-        state: { from: currentLocation }
+      navigate('/login', {
+        state: { from: currentLocation },
       })
     }
 
     if (authToken) {
       const data = JSON.parse(authToken)
       dispatch(setCredentials(data))
-    } else {
+    }
+    else {
       const currentLocation = `${location.pathname}`
-      navigate("/login", {
-        state: { from: currentLocation }
+      navigate('/login', {
+        state: { from: currentLocation },
       })
     }
   })

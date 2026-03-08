@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import App from './App'
@@ -9,12 +8,12 @@ import './locales/i18next'
 import './index.scss'
 
 const rollbarConfig = {
-  accessToken: "7c9bbdc065a749268589a6907241ee0b",
-  environment: "production",
+  accessToken: '7c9bbdc065a749268589a6907241ee0b',
+  environment: 'production',
   captureUncaught: true,
 }
 
-const chat = document.getElementById("chat")
+const chat = document.getElementById('chat')
 
 ReactDOM.createRoot(chat).render(
   <RollbarProvider config={rollbarConfig}>

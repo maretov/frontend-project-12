@@ -8,15 +8,15 @@ const Header = () => {
   const { token } = useSelector(state => state.auth)
 
   const logout = () => {
-    localStorage.removeItem("authToken")
+    localStorage.removeItem('authToken')
     dispatch(removeCredentials())
   }
 
   return (
     <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
       <div className="container">
-        <a className="navbar-brand" href="/">{t("header.logo")}</a>
-        {token && <button onClick={logout} type="button" className="btn btn-primary">{t("header.button")}</button>}
+        <a className="navbar-brand" href="/">{t('header.logo')}</a>
+        {token && <button onClick={logout} type="button" className="btn btn-primary">{t('header.button')}</button>}
       </div>
     </nav>
   )

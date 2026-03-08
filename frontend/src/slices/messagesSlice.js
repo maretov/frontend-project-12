@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  messages: {}
+  messages: {},
 }
 
 const messagesSlice = createSlice({
-  name: "messages",
+  name: 'messages',
   initialState,
   reducers: {
     addMessages: (state, action) => {
@@ -21,8 +21,8 @@ const messagesSlice = createSlice({
     },
     removeMessage: (state, action) => { // eslint-disable-line no-unused-vars
 
-    }
-  }
+    },
+  },
 })
 
 export const { addMessages, addMessage, editMessage, removeMessage } = messagesSlice.actions

@@ -8,7 +8,7 @@ const ModalAdd = (props) => {
   const { onHide, action, channelsNames } = props
 
   const { t } = useTranslation()
-  
+
   const inputRef = useRef()
 
   useEffect(() => {
@@ -20,20 +20,20 @@ const ModalAdd = (props) => {
   const schema = yup.object().shape({
     channelName: yup
       .string()
-      .required("Обязательное поле")
-      .min(3, "От 3 до 20 символов")
-      .max(20, "От 3 до 20 символов")
-      .notOneOf(channelsNames, "Должно быть уникальным")
+      .required('Обязательное поле')
+      .min(3, 'От 3 до 20 символов')
+      .max(20, 'От 3 до 20 символов')
+      .notOneOf(channelsNames, 'Должно быть уникальным')
   })
 
   return (
     <Modal show={true} centered>
       <Modal.Header closeButton onClick={onHide}>
-        <Modal.Title>{t("modals.header.add")}</Modal.Title>
+        <Modal.Title>{t('modals.header.add')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Formik
-          initialValues={{ channelName: ""}}
+          initialValues={{ channelName: "" }}
           onSubmit={async (values) => {
             action(values.channelName)
             onHide()
@@ -43,7 +43,7 @@ const ModalAdd = (props) => {
           {({ handleSubmit, handleChange, values, touched, errors }) => (
             <Form noValidate onSubmit={handleSubmit}>
               <Form.Group>
-                <Form.Label htmlFor="channelName" className="visually-hidden">{t("modals.label")}</Form.Label>
+                <Form.Label htmlFor="channelName" className="visually-hidden">{t('modals.label')}</Form.Label>
                 
                 <Form.Control
                   value={values.channelName}
@@ -61,8 +61,8 @@ const ModalAdd = (props) => {
                 <Form.Control.Feedback type="invalid">{errors.channelName}</Form.Control.Feedback>
                 
                 <div className="d-flex justify-content-end">
-                  <Button type="button" variant="secondary" className="me-2" onClick={onHide}>{t("modals.buttons.cancel")}</Button>
-                  <Button type="submit">{t("modals.buttons.send")}</Button>
+                  <Button type="button" variant="secondary" className="me-2" onClick={onHide}>{t('modals.buttons.cancel')}</Button>
+                  <Button type="submit">{t('modals.buttons.send')}</Button>
                 </div>
               </Form.Group>
             </Form>

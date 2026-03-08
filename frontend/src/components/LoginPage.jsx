@@ -16,38 +16,39 @@ const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
-  const { t } = useTranslation() 
+  const { t } = useTranslation()
   const ref = useRef()
-  
+
   const Footer = () => (
     <div className="text-center p-3">
-      <span>{t("login.footer.question")}</span>
-      <Link to="/signup">{t("login.footer.link")}</Link>
+      <span>{t('login.footer.question')}</span>
+      <Link to="/signup">{t('login.footer.link')}</Link>
     </div>
   )
 
   const formik = useFormik({
-    initialValues: { username: "", password: "" },
+    initialValues: { username: '', password: '' },
     onSubmit: async (values) => {
       try {
         const response = await axios.post(path.login(), values)
         const { data } = response
 
-        localStorage.setItem("authToken", JSON.stringify(data))
+        localStorage.setItem('authToken', JSON.stringify(data))
         dispatch(setCredentials(data))
 
-        const redirectPage = location.state ? location.state.from : "/"
+        const redirectPage = location.state ? location.state.from : '/'
         navigate(redirectPage)
       }
       catch (e) {
         if (e.status === 401) {
-          console.warn("Код ошибки 401. Неверные логин или пароль")
-          formik.errors.submit = t("login.error")
-        } else {
+          console.warn('Код ошибки 401. Неверные логин или пароль')
+          formik.errors.submit = t('login.error')
+        }
+        else {
           console.error(`Неизвестная ошибка: ${e}`)
         }
       }
-    }
+    },
   })
 
   useEffect(() => {
@@ -69,14 +70,14 @@ const LoginPage = () => {
             alt="Авторизация"
           />
           <div className="w-50">
-            <h1 className="text-center mb-3">{t("login.header")}</h1>
+            <h1 className="text-center mb-3">{t('login.header')}</h1>
             <Form noValidate onSubmit={handleSubmit}>
 
-              <FloatingLabel controlId="username" label={t("login.form.username")} className="mb-3">
+              <FloatingLabel controlId="username" label={t('login.form.username')} className="mb-3">
                 <Form.Control
                   type="text"
                   name="username"
-                  placeholder={t("login.form.username")}
+                  placeholder={t('login.form.username')}
                   value={values.username}
                   onChange={handleChange}
                   isInvalid={errors.submit && touched.username && touched.password}
@@ -85,11 +86,11 @@ const LoginPage = () => {
                 </Form.Control>
               </FloatingLabel>
 
-              <FloatingLabel controlId="password" label={t("login.form.password")} className="mb-3">
+              <FloatingLabel controlId="password" label={t('login.form.password')} className="mb-3">
                 <Form.Control
                   type="password"
                   name="password"
-                  placeholder={t("login.form.password")}
+                  placeholder={t('login.form.password')}
                   value={values.password}
                   onChange={handleChange}
                   isInvalid={errors.submit && touched.username && touched.password}
@@ -99,8 +100,8 @@ const LoginPage = () => {
                 <Form.Control.Feedback type="invalid" tooltip>{errors.submit}</Form.Control.Feedback>
               </FloatingLabel>
 
-              <Button  type="submit"  variant="outline-primary w-100 mb-3">
-                {t("login.form.button")}
+              <Button type="submit" variant="outline-primary w-100 mb-3">
+                {t('login.form.button')}
               </Button>
 
             </Form>
