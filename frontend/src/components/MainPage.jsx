@@ -276,7 +276,7 @@ const MainPage = () => {
   const { token, headers } = useSelector(state => state.auth)
   const { defaultChannel, activeChannel } = useSelector(state => state.channels)
   const { messages } = useSelector(state => state.messages)
-  
+
   const authToken = localStorage.getItem('authToken')
 
   useEffect(() => {

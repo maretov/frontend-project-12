@@ -23,7 +23,7 @@ const ModalAdd = (props) => {
       .required('Обязательное поле')
       .min(3, 'От 3 до 20 символов')
       .max(20, 'От 3 до 20 символов')
-      .notOneOf(channelsNames, 'Должно быть уникальным')
+      .notOneOf(channelsNames, 'Должно быть уникальным'),
   })
 
   return (
@@ -33,7 +33,7 @@ const ModalAdd = (props) => {
       </Modal.Header>
       <Modal.Body>
         <Formik
-          initialValues={{ channelName: "" }}
+          initialValues={{ channelName: '' }}
           onSubmit={async (values) => {
             action(values.channelName)
             onHide()
@@ -44,7 +44,7 @@ const ModalAdd = (props) => {
             <Form noValidate onSubmit={handleSubmit}>
               <Form.Group>
                 <Form.Label htmlFor="channelName" className="visually-hidden">{t('modals.label')}</Form.Label>
-                
+
                 <Form.Control
                   value={values.channelName}
                   onChange={handleChange}
@@ -57,9 +57,9 @@ const ModalAdd = (props) => {
                   ref={inputRef}
                 >
                 </Form.Control>
-                
+
                 <Form.Control.Feedback type="invalid">{errors.channelName}</Form.Control.Feedback>
-                
+
                 <div className="d-flex justify-content-end">
                   <Button type="button" variant="secondary" className="me-2" onClick={onHide}>{t('modals.buttons.cancel')}</Button>
                   <Button type="submit">{t('modals.buttons.send')}</Button>

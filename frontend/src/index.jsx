@@ -24,5 +24,5 @@ ReactDOM.createRoot(chat).render(
         </BrowserRouter>
       </StoreProvider>
     </ErrorBoundary>
-  </RollbarProvider>
+  </RollbarProvider>,
 )

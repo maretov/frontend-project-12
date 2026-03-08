@@ -103,7 +103,8 @@ const SignUp = () => {
                   onBlur={handleBlur}
                   isInvalid={errors.username && touched.username}
                   ref={ref}
-                ></Form.Control>
+                >
+                </Form.Control>
                 <Form.Control.Feedback type="invalid" tooltip>
                   {errors.username ? errors.username : null}
                 </Form.Control.Feedback>

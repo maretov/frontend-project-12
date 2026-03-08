@@ -5,7 +5,7 @@ const initialState = {
   token: null,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: null,
+    'Authorization': null,
   },
 }
 
