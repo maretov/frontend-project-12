@@ -1,17 +1,17 @@
-import { useRef, useEffect, useState } from "react"
-import { useLocation, useNavigate, Link } from "react-router"
-import { useDispatch } from "react-redux"
-import { useTranslation } from "react-i18next"
-import { useFormik } from "formik"
-import * as yup from "yup"
+import { useRef, useEffect, useState } from 'react'
+import { useLocation, useNavigate, Link } from 'react-router'
+import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useFormik } from 'formik'
+import * as yup from 'yup'
 
-import { setCredentials } from "../slices/authSlice"
-import { Button, Form, FloatingLabel } from "react-bootstrap"
+import { setCredentials } from '../slices/authSlice'
+import { Button, Form, FloatingLabel } from 'react-bootstrap'
 
-import Header from "./Header"
-import AuthContainer from "./AuthContainer"
-import axios from "axios"
-import path from "../routes"
+import Header from './Header'
+import AuthContainer from './AuthContainer'
+import axios from 'axios'
+import path from '../routes'
 
 const SignUp = () => {
   const navigate = useNavigate()

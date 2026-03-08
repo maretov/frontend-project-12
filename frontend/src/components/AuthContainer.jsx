@@ -1,4 +1,4 @@
-import { Card } from "react-bootstrap"
+import { Card } from 'react-bootstrap'
 
 const AuthContainer = (props) => {
   const { footer, children } = props

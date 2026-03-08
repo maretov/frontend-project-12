@@ -1,12 +1,12 @@
-import React from "react"
-import ReactDOM from "react-dom/client"
-import { BrowserRouter } from "react-router"
-import App from "./App"
-import store from "./slices/index"
-import { Provider as StoreProvider } from "react-redux"
-import { Provider as RollbarProvider, ErrorBoundary } from "@rollbar/react"
-import "./locales/i18next"
-import "./index.scss"
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router'
+import App from './App'
+import store from './slices/index'
+import { Provider as StoreProvider } from 'react-redux'
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
+import './locales/i18next'
+import './index.scss'
 
 const rollbarConfig = {
   accessToken: "7c9bbdc065a749268589a6907241ee0b",

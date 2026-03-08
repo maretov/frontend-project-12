@@ -1,8 +1,8 @@
-import { useEffect, useRef } from "react"
-import { Formik } from "formik"
-import { Modal, Form, Button } from "react-bootstrap"
-import * as yup from "yup"
-import { useTranslation } from "react-i18next"
+import { useEffect, useRef } from 'react'
+import { Formik } from 'formik'
+import { Modal, Form, Button } from 'react-bootstrap'
+import * as yup from 'yup'
+import { useTranslation } from 'react-i18next'
 
 const ModalEdit = (props) => {
   const { onHide, action, channelsNames, channel } = props

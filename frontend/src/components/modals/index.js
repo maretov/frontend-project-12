@@ -1,6 +1,6 @@
-import Add from "./Add"
-import Rename from "./Rename"
-import Remove from "./Remove"
+import Add from './Add'
+import Rename from './Rename'
+import Remove from './Remove'
 
 const modals = {
   add: Add,
