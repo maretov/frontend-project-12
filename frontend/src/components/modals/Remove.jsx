@@ -1,5 +1,5 @@
-import { Modal, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
+import { Modal, Button } from 'react-bootstrap'
 
 const ModalRemove = (props) => {
   const { onHide, action } = props

@@ -4,7 +4,7 @@ import App from './App'
 import store from './slices/index'
 import { Provider as StoreProvider } from 'react-redux'
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
-import './locales/i18next'
+import './locales/index'
 import './index.scss'
 
 const rollbarConfig = {

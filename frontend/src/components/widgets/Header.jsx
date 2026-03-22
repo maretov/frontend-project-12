@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { removeCredentials } from '../slices/authSlice'
 import { useTranslation } from 'react-i18next'
+import { removeCredentials } from '../../slices/authSlice'
+import { Navbar, Container, Button } from 'react-bootstrap'
 
 const Header = () => {
   const dispatch = useDispatch()
@@ -13,12 +14,12 @@ const Header = () => {
   }
 
   return (
-    <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-      <div className="container">
-        <a className="navbar-brand" href="/">{t('header.logo')}</a>
-        {token && <button onClick={logout} type="button" className="btn btn-primary">{t('header.button')}</button>}
-      </div>
-    </nav>
+    <Navbar>
+      <Container>
+        <Navbar.Brand href="/">{t('header.logo')}</Navbar.Brand>
+        {token && <Button onClick={logout}>{t('header.button')}</Button>}
+      </Container>
+    </Navbar>
   )
 }
 

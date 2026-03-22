@@ -1,4 +1,4 @@
-import Header from './Header'
+import Header from '../widgets/Header'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 

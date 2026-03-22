@@ -1,19 +1,19 @@
 import { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
-import { setCredentials } from '../slices/authSlice'
-import { addChannels, addChannel, renameChannel, removeChannel, setActiveChannel } from '../slices/channelsSlice'
-import { addMessages, addMessage } from '../slices/messagesSlice'
+import { setCredentials } from '../../slices/authSlice'
+import { addChannels, addChannel, renameChannel, removeChannel, setActiveChannel } from '../../slices/channelsSlice'
+import { addMessages, addMessage } from '../../slices/messagesSlice'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
-import path from '../routes'
-import { js, normalize, filterMessages, renderMessages } from '../utils' // eslint-disable-line no-unused-vars
+import path from '../../routes'
+import { js, normalize, filterMessages, renderMessages } from '../../utils' // eslint-disable-line no-unused-vars
 import { io } from 'socket.io-client'
-import getModal from './modals/index'
+import getModal from '../modals/index'
 import _ from 'lodash'
 import { Button, ButtonGroup, Dropdown } from 'react-bootstrap'
 
-import Header from './Header'
+import Header from '../widgets/Header'
 
 import { ToastContainer, toast } from 'react-toastify'
 import filter from 'leo-profanity'
