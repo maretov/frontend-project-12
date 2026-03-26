@@ -62,7 +62,7 @@ const LoginPage = () => {
         <Container>
           <Row>
             <Col xs={5} className="d-flex justify-content-center align-content-center p-5">
-              <Image src="./src/assets/avatar-login.jpg" roundedCircle/>
+              <Image src="./src/assets/avatar-login.jpg" roundedCircle />
             </Col>
             <Col className="p-4">
               <h1 className="text-center mb-3">{t('login.header')}</h1>

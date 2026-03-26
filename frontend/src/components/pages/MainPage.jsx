@@ -7,7 +7,7 @@ import { addMessages, addMessage } from '../../slices/messagesSlice'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
 import path from '../../routes'
-import { js, normalize, filterMessages, renderMessages } from '../../utils' // eslint-disable-line no-unused-vars
+import { normalize, filterMessages, renderMessages } from '../../utils'
 import { io } from 'socket.io-client'
 import getModal from '../modals/index'
 import _ from 'lodash'
