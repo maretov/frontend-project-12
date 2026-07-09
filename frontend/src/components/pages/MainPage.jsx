@@ -2,13 +2,14 @@ import { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 import { setCredentials } from '../../slices/authSlice'
-import { addChannels, addChannel, renameChannel, removeChannel, setActiveChannel } from '../../slices/channelsSlice'
-import { addMessages, addMessage } from '../../slices/messagesSlice'
+import { addChannels, setActiveChannel } from '../../slices/channelsSlice'
+import { addMessages } from '../../slices/messagesSlice'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
 import path from '../../routes'
+
 import { normalize, filterMessages, renderMessages } from '../../utils'
-import { io } from 'socket.io-client'
+
 import getModal from '../modals/index'
 import _ from 'lodash'
 import { Button, ButtonGroup, Dropdown } from 'react-bootstrap'
@@ -17,6 +18,8 @@ import Header from '../widgets/Header'
 
 import { ToastContainer, toast } from 'react-toastify'
 import filter from 'leo-profanity'
+
+// import { SocketContext } from '../../services/useSocket'
 
 // CHANNELS AREA
 const ChannelsArea = () => {
@@ -171,6 +174,7 @@ const ChatArea = () => {
   const inputRef = useRef()
   const [newMessage, setNewMessage] = useState('')
 
+
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`,
@@ -274,45 +278,8 @@ const MainPage = () => {
   const location = useLocation()
   const dispatch = useDispatch()
   const { token, headers } = useSelector(state => state.auth)
-  const { defaultChannel, activeChannel } = useSelector(state => state.channels)
-  const { messages } = useSelector(state => state.messages)
 
   const authToken = localStorage.getItem('authToken')
-
-  useEffect(() => {
-    const socket = io()
-    socket.on('newMessage', (message) => {
-      dispatch(addMessage(message))
-    })
-    socket.on('newChannel', (channel) => {
-      dispatch(addChannel(channel))
-    })
-    socket.on('renameChannel', (channel) => {
-      dispatch(renameChannel(channel))
-    })
-    socket.on('removeChannel', ({ id }) => {
-      _.values(messages)
-        .filter(message => message.channelId === id)
-        .map(message => message.id)
-        .forEach(async (idForRemove) => {
-          try {
-            await axios.delete(path.messages(idForRemove), { headers })
-          }
-          catch (error) {
-            console.log(`Error removing message with id ${idForRemove}. Error: ${error}`)
-          }
-        })
-
-      dispatch(removeChannel(id))
-      if (activeChannel.id === id) {
-        dispatch(setActiveChannel(defaultChannel))
-      }
-    })
-
-    return () => {
-      socket.disconnect()
-    }
-  })
 
   // если есть токен в localStorage, то добавляем его в состояние
   // если токена в localStorage нет, то перенаправляем на страницу входа

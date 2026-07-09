@@ -16,14 +16,12 @@ const messagesSlice = createSlice({
       const { payload } = action
       state.messages[payload.id] = payload
     },
-    editMessage: (state, action) => { // eslint-disable-line no-unused-vars
-
-    },
-    removeMessage: (state, action) => { // eslint-disable-line no-unused-vars
-
+    removeMessages: (state, action) => {
+      const { payload } = action
+      payload.forEach((id) => delete state.messages[id])
     },
   },
 })
 
-export const { addMessages, addMessage, editMessage, removeMessage } = messagesSlice.actions
+export const { addMessages, addMessage, removeMessages } = messagesSlice.actions
 export default messagesSlice.reducer

@@ -13,9 +13,9 @@ const channelsSlice = createSlice({
     addChannels: (state, action) => {
       const { payload } = action
       state.channels = payload
-      const firstChannelId = Object.keys(payload)[0]
-      state.activeChannel = payload[firstChannelId]
-      state.defaultChannel = payload[firstChannelId]
+      const [firstChannel] = Object.values(payload)
+      state.defaultChannel = firstChannel
+      state.activeChannel = firstChannel
     },
     addChannel: (state, action) => {
       const { payload } = action
@@ -29,6 +29,7 @@ const channelsSlice = createSlice({
       const { payload: id } = action
       const { [id]: removed, ...restChannels } = state.channels // eslint-disable-line no-unused-vars
       state.channels = restChannels
+      state.activeChannel = state.defaultChannel
     },
     setActiveChannel: (state, action) => {
       const { payload } = action

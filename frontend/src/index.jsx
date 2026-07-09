@@ -6,6 +6,9 @@ import { Provider as StoreProvider } from 'react-redux'
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
 import './locales/index'
 import './index.scss'
+import './services/initSocket'
+import SocketProvider from './services/useSocket'
+
 
 const rollbarConfig = {
   accessToken: '7c9bbdc065a749268589a6907241ee0b',
@@ -20,7 +23,9 @@ ReactDOM.createRoot(chat).render(
     <ErrorBoundary>
       <StoreProvider store={store}>
         <BrowserRouter>
-          <App />
+          <SocketProvider>
+            <App />
+          </SocketProvider>
         </BrowserRouter>
       </StoreProvider>
     </ErrorBoundary>
