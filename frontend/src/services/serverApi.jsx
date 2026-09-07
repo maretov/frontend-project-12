@@ -18,8 +18,7 @@ const ServerApiProvider = ({ children }) => {
   }
 
   const addChannel = async (newChannel) => {
-    const { auth } = store.getState()
-    const { headers } = auth
+    const headers = getHeaders()
 
     try {
       const response = await axios.post(path.channels(), { name: filter.clean(newChannel) }, { headers })
@@ -33,8 +32,7 @@ const ServerApiProvider = ({ children }) => {
   }
 
   const renameChannel = channel => async (renamedChannel) => {
-    const { auth } = store.getState()
-    const { headers } = auth
+    const headers = getHeaders()
 
     try {
       await axios.patch(path.channels(channel.id), { name: filter.clean(renamedChannel) }, { headers })
