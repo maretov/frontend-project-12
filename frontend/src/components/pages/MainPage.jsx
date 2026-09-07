@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 import { setCredentials } from '../../slices/authSlice'
@@ -19,7 +19,7 @@ import Header from '../widgets/Header'
 import { ToastContainer, toast } from 'react-toastify'
 import filter from 'leo-profanity'
 
-// import { SocketContext } from '../../services/useSocket'
+import { ServerApiContext } from '../../services/serverApiContext'
 
 // CHANNELS AREA
 const ChannelsArea = () => {
@@ -29,20 +29,10 @@ const ChannelsArea = () => {
   const { t } = useTranslation()
   const [modal, setModal] = useState({ type: null, action: null, channel: null })
 
+  const serverApi = useContext(ServerApiContext)
+
   const showModal = (type, action, channel = null) => setModal({ type, action, channel })
   const hideModal = () => setModal({ type: null, action: null, channel: null })
-
-  const addChannel = async (newChannel) => {
-    try {
-      const response = await axios.post(path.channels(), { name: filter.clean(newChannel) }, { headers })
-      dispatch(setActiveChannel(response.data))
-      toast.success(t('toasts.success.add'))
-    }
-    catch (e) {
-      toast.error(t('toasts.errors.add'))
-      console.log(`Error adding new channel ${newChannel}. Error: ${e}`)
-    }
-  }
 
   const renameChannel = channel => async (renamedChannel) => {
     try {
@@ -72,7 +62,7 @@ const ChannelsArea = () => {
     <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
       <b>{t('channels.header')}</b>
       <button
-        onClick={() => showModal('add', addChannel)}
+        onClick={() => showModal('add', serverApi.handleAddChannel)}
         type="button"
         className="p-0 text-primary btn btn-group-vertical"
       >

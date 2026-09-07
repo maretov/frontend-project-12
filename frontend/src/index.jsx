@@ -7,7 +7,7 @@ import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
 import './locales/index'
 import './index.scss'
 import './services/initSocket'
-import SocketProvider from './services/useSocket'
+import ServerApiProvider from './services/serverApi'
 
 
 const rollbarConfig = {
@@ -23,9 +23,9 @@ ReactDOM.createRoot(chat).render(
     <ErrorBoundary>
       <StoreProvider store={store}>
         <BrowserRouter>
-          <SocketProvider>
+          <ServerApiProvider>
             <App />
-          </SocketProvider>
+          </ServerApiProvider>
         </BrowserRouter>
       </StoreProvider>
     </ErrorBoundary>

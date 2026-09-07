@@ -3,6 +3,9 @@ import MainPage from './components/pages/MainPage'
 import LoginPage from './components/pages/LoginPage'
 import ErrorPage from './components/pages/ErrorPage'
 import SignupPage from './components/pages/SignupPage'
+import initSocket from './services/initSocket'
+
+initSocket()
 
 const App = () => {
   return (
