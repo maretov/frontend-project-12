@@ -16,7 +16,7 @@ import { Button, ButtonGroup, Dropdown } from 'react-bootstrap'
 
 import Header from '../widgets/Header'
 
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import filter from 'leo-profanity'
 
 import { ServerApiContext } from '../../services/serverApiContext'
@@ -24,7 +24,6 @@ import { ServerApiContext } from '../../services/serverApiContext'
 // CHANNELS AREA
 const ChannelsArea = () => {
   const { channels, activeChannel } = useSelector(state => state.channels)
-  const { headers } = useSelector(state => state.auth)
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const [modal, setModal] = useState({ type: null, action: null, channel: null })
@@ -34,35 +33,13 @@ const ChannelsArea = () => {
   const showModal = (type, action, channel = null) => setModal({ type, action, channel })
   const hideModal = () => setModal({ type: null, action: null, channel: null })
 
-  const renameChannel = channel => async (renamedChannel) => {
-    try {
-      await axios.patch(path.channels(channel.id), { name: filter.clean(renamedChannel) }, { headers })
-      toast.success(t('toasts.success.rename'))
-    }
-    catch (e) {
-      toast.error(t('toasts.errors.rename'))
-      console.log(`Error renaming channel ${channel.name}. Error: ${e}`)
-    }
-  }
-
-  const removeChannel = channel => async () => {
-    try {
-      await axios.delete(path.channels(channel.id), { headers })
-      toast.success(t('toasts.success.remove'))
-    }
-    catch (e) {
-      toast.error(t('toasts.errors.remove'))
-      console.log(`Error removing channel with ID ${channel.id}. Error: ${e}`)
-    }
-  }
-
   const channelsNames = _.values(channels).map(i => i.name)
 
   const Header = () => (
     <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
       <b>{t('channels.header')}</b>
       <button
-        onClick={() => showModal('add', serverApi.handleAddChannel)}
+        onClick={() => showModal('add', serverApi.addChannel)}
         type="button"
         className="p-0 text-primary btn btn-group-vertical"
       >
@@ -107,13 +84,13 @@ const ChannelsArea = () => {
                 <Dropdown.Menu>
                   <Dropdown.Item
                     href="#"
-                    onClick={() => showModal('remove', removeChannel(channel), channel)}
+                    onClick={() => showModal('remove', serverApi.removeChannel(channel), channel)}
                   >
                     {t('channels.buttons.remove')}
                   </Dropdown.Item>
                   <Dropdown.Item
                     href="#"
-                    onClick={() => showModal('rename', renameChannel(channel), channel)}
+                    onClick={() => showModal('rename', serverApi.renameChannel(channel), channel)}
                   >
                     {t('channels.buttons.rename')}
                   </Dropdown.Item>
@@ -163,7 +140,6 @@ const ChatArea = () => {
 
   const inputRef = useRef()
   const [newMessage, setNewMessage] = useState('')
-
 
   const headers = {
     'Content-Type': 'application/json',

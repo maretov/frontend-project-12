@@ -12,7 +12,12 @@ const ServerApiProvider = ({ children }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
-  const handleAddChannel = async (newChannel) => {
+  const getHeaders = () => {
+    const { auth } = store.getState()
+    return auth.headers
+  }
+
+  const addChannel = async (newChannel) => {
     const { auth } = store.getState()
     const { headers } = auth
 
@@ -27,8 +32,37 @@ const ServerApiProvider = ({ children }) => {
     }
   }
 
+  const renameChannel = channel => async (renamedChannel) => {
+    const { auth } = store.getState()
+    const { headers } = auth
+
+    try {
+      await axios.patch(path.channels(channel.id), { name: filter.clean(renamedChannel) }, { headers })
+      toast.success(t('toasts.success.rename'))
+    }
+    catch (e) {
+      toast.error(t('toasts.errors.rename'))
+      console.log(`Error renaming channel ${channel.name}. Error: ${e}`)
+    }
+  }
+
+  const removeChannel = channel => async () => {
+    const headers = getHeaders()
+
+    try {
+      await axios.delete(path.channels(channel.id), { headers })
+      toast.success(t('toasts.success.remove'))
+    }
+    catch (e) {
+      toast.error(t('toasts.errors.remove'))
+      console.log(`Error removing channel with ID ${channel.id}. Error: ${e}`)
+    }
+  }
+
   const serverApi =  {
-    handleAddChannel,
+    addChannel,
+    renameChannel,
+    removeChannel,
   }
 
   return (
